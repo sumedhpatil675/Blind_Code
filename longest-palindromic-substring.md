@@ -225,31 +225,30 @@ class Solution {
 
 #### Python
 ```python
-class Solution:
-    def longestPalindrome(self, s: str) -> str:
-        resIdx = 0
-        resLen = 0
+def longestPalindrome(s: str) -> str:
+    res = ""
+    resLen = 0
+    
+    for i in range(len(s)):
+        # Check for odd-length palindromes
+        l, r = i, i
+        while l >= 0 and r < len(s) and s[l] == s[r]:
+            if (r - l + 1) > resLen:
+                res = s[l:r + 1]
+                resLen = r - l + 1
+            l -= 1
+            r += 1
         
-        for i in range(len(s)):
-            # odd length
-            l, r = i, i
-            while l >= 0 and r < len(s) and s[l] == s[r]:
-                if (r - l + 1) > resLen:
-                    resIdx = l
-                    resLen = r - l + 1
-                l -= 1
-                r += 1
-                
-            # even length
-            l, r = i, i + 1
-            while l >= 0 and r < len(s) and s[l] == s[r]:
-                if (r - l + 1) > resLen:
-                    resIdx = l
-                    resLen = r - l + 1
-                l -= 1
-                r += 1
-                
-        return s[resIdx : resIdx + resLen]
+        # Check for even-length palindromes
+        l, r = i, i + 1
+        while l >= 0 and r < len(s) and s[l] == s[r]:
+            if (r - l + 1) > resLen:
+                res = s[l:r + 1]
+                resLen = r - l + 1
+            l -= 1
+            r += 1
+    
+    return res
 ```
 
 #### JavaScript
@@ -258,65 +257,72 @@ class Solution:
  * @param {string} s
  * @return {string}
  */
-var longestPalindrome = function(s) {
-    let start = 0;
-    let maxLength = 1;
+function longestPalindrome(s) {
+    let res = "";
+    let resLen = 0;
     
-    function expandAroundCenter(left, right) {
-        while (left >= 0 && right < s.length && s[left] === s[right]) {
-            const currentLength = right - left + 1;
-            if (currentLength > maxLength) {
-                maxLength = currentLength;
-                start = left;
+    for (let i = 0; i < s.length; i++) {
+        // Check for odd-length palindromes
+        let l = i, r = i;
+        while (l >= 0 && r < s.length && s[l] === s[r]) {
+            if ((r - l + 1) > resLen) {
+                res = s.substring(l, r + 1);
+                resLen = r - l + 1;
             }
-            left--;
-            right++;
+            l--;
+            r++;
+        }
+        
+        // Check for even-length palindromes
+        l = i;
+        r = i + 1;
+        while (l >= 0 && r < s.length && s[l] === s[r]) {
+            if ((r - l + 1) > resLen) {
+                res = s.substring(l, r + 1);
+                resLen = r - l + 1;
+            }
+            l--;
+            r++;
         }
     }
     
-    for (let i = 0; i < s.length; i++) {
-        // Odd length palindromes
-        expandAroundCenter(i, i);
-        // Even length palindromes
-        expandAroundCenter(i, i + 1);
-    }
-    
-    return s.substring(start, start + maxLength);
-};
+    return res;
+}
 ```
 
 #### Java
 ```java
 class Solution {
     public String longestPalindrome(String s) {
-        if (s == null || s.length() < 1) return "";
-        
-        int start = 0;
-        int maxLength = 1;
+        String res = "";
+        int resLen = 0;
         
         for (int i = 0; i < s.length(); i++) {
-            // Odd length palindromes
-            int len1 = expandAroundCenter(s, i, i);
-            // Even length palindromes
-            int len2 = expandAroundCenter(s, i, i + 1);
-            int len = Math.max(len1, len2);
+            // Check for odd-length palindromes
+            int l = i, r = i;
+            while (l >= 0 && r < s.length() && s.charAt(l) == s.charAt(r)) {
+                if ((r - l + 1) > resLen) {
+                    res = s.substring(l, r + 1);
+                    resLen = r - l + 1;
+                }
+                l--;
+                r++;
+            }
             
-            if (len > maxLength) {
-                maxLength = len;
-                start = i - (len - 1) / 2;
+            // Check for even-length palindromes
+            l = i;
+            r = i + 1;
+            while (l >= 0 && r < s.length() && s.charAt(l) == s.charAt(r)) {
+                if ((r - l + 1) > resLen) {
+                    res = s.substring(l, r + 1);
+                    resLen = r - l + 1;
+                }
+                l--;
+                r++;
             }
         }
         
-        return s.substring(start, start + maxLength);
-    }
-    
-    private int expandAroundCenter(String s, int left, int right) {
-        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
-            left--;
-            right++;
-        }
-        
-        return right - left - 1;
+        return res;
     }
 }
 ```
