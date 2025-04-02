@@ -290,17 +290,25 @@ class Solution {
 ```python
 class Solution:
     def rob(self, nums: List[int]) -> int:
-        return max(nums[0], self.helper(nums[1:]), self.helper(nums[:-1]))
-        
-    def helper(self, nums):
-        rob1, rob2 = 0, 0
-        
-        for num in nums:
-            newRob = max(rob1 + num, rob2)
-            rob1 = rob2
-            rob2 = newRob
+        if len(nums) == 1:
+            return nums[0]
             
-        return rob2
+        # Handle circular arrangement by creating two scenarios:
+        # 1. Skip the first house
+        # 2. Skip the last house
+        leave_last_house = nums[:-1]
+        leave_first_house = nums[1:]
+        
+        return max(self.helper(leave_last_house), self.helper(leave_first_house))
+    
+    def helper(self, nums: List[int]) -> int:
+        one_before_previous_house_money, previous_house_money = 0, 0
+        for i in range(len(nums)):
+            current_house_money = nums[i]
+            temp = max(one_before_previous_house_money + current_house_money, previous_house_money)
+            one_before_previous_house_money = previous_house_money
+            previous_house_money = temp
+        return previous_house_money
 ```
 
 #### JavaScript
@@ -314,22 +322,26 @@ var rob = function(nums) {
         return nums[0];
     }
     
-    return Math.max(
-        helper(nums.slice(1)),
-        helper(nums.slice(0, -1))
-    );
+    // Handle circular arrangement by creating two scenarios:
+    // 1. Skip the first house
+    // 2. Skip the last house
+    const leave_last_house = nums.slice(0, nums.length - 1);
+    const leave_first_house = nums.slice(1);
+    
+    return Math.max(helper(leave_last_house), helper(leave_first_house));
     
     function helper(nums) {
-        let rob1 = 0;
-        let rob2 = 0;
+        let one_before_previous_house_money = 0;
+        let previous_house_money = 0;
         
-        for (const num of nums) {
-            const temp = Math.max(rob1 + num, rob2);
-            rob1 = rob2;
-            rob2 = temp;
+        for (let i = 0; i < nums.length; i++) {
+            const current_house_money = nums[i];
+            const temp = Math.max(one_before_previous_house_money + current_house_money, previous_house_money);
+            one_before_previous_house_money = previous_house_money;
+            previous_house_money = temp;
         }
         
-        return rob2;
+        return previous_house_money;
     }
 };
 ```
@@ -342,23 +354,25 @@ class Solution {
             return nums[0];
         }
         
-        return Math.max(
-            helper(Arrays.copyOfRange(nums, 1, nums.length)),
-            helper(Arrays.copyOfRange(nums, 0, nums.length - 1))
-        );
+        // Handle circular arrangement by creating two scenarios:
+        // 1. Skip the first house
+        // 2. Skip the last house
+        return Math.max(helper(Arrays.copyOfRange(nums, 0, nums.length - 1)), 
+                        helper(Arrays.copyOfRange(nums, 1, nums.length)));
     }
     
     private int helper(int[] nums) {
-        int rob1 = 0;
-        int rob2 = 0;
+        int one_before_previous_house_money = 0;
+        int previous_house_money = 0;
         
-        for (int num : nums) {
-            int temp = Math.max(rob1 + num, rob2);
-            rob1 = rob2;
-            rob2 = temp;
+        for (int i = 0; i < nums.length; i++) {
+            int current_house_money = nums[i];
+            int temp = Math.max(one_before_previous_house_money + current_house_money, previous_house_money);
+            one_before_previous_house_money = previous_house_money;
+            previous_house_money = temp;
         }
         
-        return rob2;
+        return previous_house_money;
     }
 }
 ```
