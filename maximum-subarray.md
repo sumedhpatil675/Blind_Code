@@ -56,43 +56,46 @@ public int maxSubArray(int[] nums) {
 
 #### Python
 ```python
-def maxSubArray(nums):
-    max_sum = current_sum = nums[0]
-    
-    for num in nums[1:]:
-        current_sum = max(num, current_sum + num)
-        max_sum = max(max_sum, current_sum)
-    
-    return max_sum
+def maxSubArray(self, nums: List[int]) -> int:
+    maxSub = nums[0]
+    currSum = 0
+    for i in range(len(nums)):
+        if currSum < 0:
+            currSum = 0
+        currSum += nums[i]
+        maxSub = max(maxSub,currSum)
+    return maxSub
 ```
 
 #### JavaScript
 ```javascript
 function maxSubArray(nums) {
-    let maxSum = nums[0];
-    let currentSum = nums[0];
-    
-    for (let i = 1; i < nums.length; i++) {
-        currentSum = Math.max(nums[i], currentSum + nums[i]);
-        maxSum = Math.max(maxSum, currentSum);
+    let maxSub = nums[0];
+    let currSum = 0;
+    for (let i = 0; i < nums.length; i++) {
+        if (currSum < 0) {
+            currSum = 0;
+        }
+        currSum += nums[i];
+        maxSub = Math.max(maxSub, currSum);
     }
-    
-    return maxSum;
+    return maxSub;
 }
 ```
 
 #### Java
 ```java
 public int maxSubArray(int[] nums) {
-    int maxSum = nums[0];
-    int currentSum = nums[0];
-    
-    for (int i = 1; i < nums.length; i++) {
-        currentSum = Math.max(nums[i], currentSum + nums[i]);
-        maxSum = Math.max(maxSum, currentSum);
+    int maxSub = nums[0];
+    int currSum = 0;
+    for (int i = 0; i < nums.length; i++) {
+        if (currSum < 0) {
+            currSum = 0;
+        }
+        currSum += nums[i];
+        maxSub = Math.max(maxSub, currSum);
     }
-    
-    return maxSum;
+    return maxSub;
 }
 ```
 
