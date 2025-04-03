@@ -155,6 +155,7 @@ private int dfs(int[] nums, int i, int j, int[][] memo) {
 - **Time complexity**: O(n²)
 - **Space complexity**: O(n)
 
+
 #### Python
 ```python
 def lengthOfLIS(nums):
@@ -207,6 +208,123 @@ public int lengthOfLIS(int[] nums) {
     return max;
 }
 ```
+
+## DP Table Trace
+
+Input array: `nums = [10, 9, 2, 5, 3, 7, 101, 18]`
+
+The DP table (LIS array) initially has all values set to 1:
+
+```
+Index:  0   1   2   3   4   5   6    7
+nums:   10  9   2   5   3   7   101  18
+LIS:    1   1   1   1   1   1   1    1
+```
+
+### Working backwards through the array:
+
+**For i = 7 (nums[7] = 18):**
+No elements to the right, so LIS[7] remains 1.
+
+```
+Index:  0   1   2   3   4   5   6    7
+nums:   10  9   2   5   3   7   101  18
+LIS:    1   1   1   1   1   1   1    1
+```
+
+**For i = 6 (nums[6] = 101):**
+- j = 7, nums[6] = 101 > nums[7] = 18, so no update.
+- LIS[6] remains 1.
+
+```
+Index:  0   1   2   3   4   5   6    7
+nums:   10  9   2   5   3   7   101  18
+LIS:    1   1   1   1   1   1   1    1
+```
+
+**For i = 5 (nums[5] = 7):**
+- j = 6, nums[5] = 7 < nums[6] = 101, so LIS[5] = max(1, 1+1) = 2
+- j = 7, nums[5] = 7 < nums[7] = 18, so LIS[5] = max(2, 1+1) = 2
+
+```
+Index:  0   1   2   3   4   5   6    7
+nums:   10  9   2   5   3   7   101  18
+LIS:    1   1   1   1   1   2   1    1
+```
+
+**For i = 4 (nums[4] = 3):**
+- j = 5, nums[4] = 3 < nums[5] = 7, so LIS[4] = max(1, 1+2) = 3
+- j = 6, nums[4] = 3 < nums[6] = 101, so LIS[4] = max(3, 1+1) = 3
+- j = 7, nums[4] = 3 < nums[7] = 18, so LIS[4] = max(3, 1+1) = 3
+
+```
+Index:  0   1   2   3   4   5   6    7
+nums:   10  9   2   5   3   7   101  18
+LIS:    1   1   1   1   3   2   1    1
+```
+
+**For i = 3 (nums[3] = 5):**
+- j = 4, nums[3] = 5 > nums[4] = 3, so no update.
+- j = 5, nums[3] = 5 < nums[5] = 7, so LIS[3] = max(1, 1+2) = 3
+- j = 6, nums[3] = 5 < nums[6] = 101, so LIS[3] = max(3, 1+1) = 3
+- j = 7, nums[3] = 5 < nums[7] = 18, so LIS[3] = max(3, 1+1) = 3
+
+```
+Index:  0   1   2   3   4   5   6    7
+nums:   10  9   2   5   3   7   101  18
+LIS:    1   1   1   3   3   2   1    1
+```
+
+**For i = 2 (nums[2] = 2):**
+- j = 3, nums[2] = 2 < nums[3] = 5, so LIS[2] = max(1, 1+3) = 4
+- j = 4, nums[2] = 2 < nums[4] = 3, so LIS[2] = max(4, 1+3) = 4
+- j = 5, nums[2] = 2 < nums[5] = 7, so LIS[2] = max(4, 1+2) = 4
+- j = 6, nums[2] = 2 < nums[6] = 101, so LIS[2] = max(4, 1+1) = 4
+- j = 7, nums[2] = 2 < nums[7] = 18, so LIS[2] = max(4, 1+1) = 4
+
+```
+Index:  0   1   2   3   4   5   6    7
+nums:   10  9   2   5   3   7   101  18
+LIS:    1   1   4   3   3   2   1    1
+```
+
+**For i = 1 (nums[1] = 9):**
+- j = 2, nums[1] = 9 > nums[2] = 2, so no update.
+- j = 3, nums[1] = 9 > nums[3] = 5, so no update.
+- j = 4, nums[1] = 9 > nums[4] = 3, so no update.
+- j = 5, nums[1] = 9 > nums[5] = 7, so no update.
+- j = 6, nums[1] = 9 < nums[6] = 101, so LIS[1] = max(1, 1+1) = 2
+- j = 7, nums[1] = 9 < nums[7] = 18, so LIS[1] = max(2, 1+1) = 2
+
+```
+Index:  0   1   2   3   4   5   6    7
+nums:   10  9   2   5   3   7   101  18
+LIS:    1   2   4   3   3   2   1    1
+```
+
+**For i = 0 (nums[0] = 10):**
+- j = 1, nums[0] = 10 > nums[1] = 9, so no update.
+- j = 2, nums[0] = 10 > nums[2] = 2, so no update.
+- j = 3, nums[0] = 10 > nums[3] = 5, so no update.
+- j = 4, nums[0] = 10 > nums[4] = 3, so no update.
+- j = 5, nums[0] = 10 > nums[5] = 7, so no update.
+- j = 6, nums[0] = 10 < nums[6] = 101, so LIS[0] = max(1, 1+1) = 2
+- j = 7, nums[0] = 10 < nums[7] = 18, so LIS[0] = max(2, 1+1) = 2
+
+```
+Index:  0   1   2   3   4   5   6    7
+nums:   10  9   2   5   3   7   101  18
+LIS:    2   2   4   3   3   2   1    1
+```
+
+## Result
+The maximum value in the LIS array is 4, so the length of the longest increasing subsequence is 4.
+
+Possible longest increasing subsequences:
+- [2, 5, 7, 101]
+- [2, 3, 7, 101]
+
+- 
 
 ### 4. Binary Search
 - **Time complexity**: O(n log n)
