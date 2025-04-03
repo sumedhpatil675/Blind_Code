@@ -156,56 +156,124 @@ private int dfs(String text1, String text2, int i, int j, int[][] memo) {
 - **Time complexity**: O(m*n)
 - **Space complexity**: O(m*n)
 
-#### Python
+## Python
 ```python
 def longestCommonSubsequence(text1, text2):
-    dp = [[0 for j in range(len(text2) + 1)] for i in range(len(text1) + 1)]
+    # m = length of first string
+    m = len(text1)
+    # n = length of second string
+    n = len(text2)
     
-    for i in range(len(text1) - 1, -1, -1):
-        for j in range(len(text2) - 1, -1, -1):
-            if text1[i] == text2[j]:
-                dp[i][j] = 1 + dp[i + 1][j + 1]
-            else:
-                dp[i][j] = max(dp[i][j + 1], dp[i + 1][j])
-                
-    return dp[0][0]
+    # Create a 2D array of size (m+1)x(n+1) filled with zeros
+    # res[i][j] will store the length of LCS of text1[0...i-1] and text2[0...j-1]
+    res = [[0]*(n+1)for _ in range(m+1)]
+    
+    # Iterate through each character of text1
+    for i in range(1,m+1): ## i represents position in text1 (1-indexed for dp array)
+        # Iterate through each character of text2
+        for j in range(1,n+1): ## j represents position in text2 (1-indexed for dp array)
+            # If current characters match
+            # text1[i-1] is the current character in text1 (0-indexed in the string)
+            # text2[j-1] is the current character in text2 (0-indexed in the string)
+            if text1[i-1]==text2[j-1]: 
+                # Add 1 to the LCS of the strings without these characters
+                # res[i-1][j-1] = LCS without the current character from both strings
+                res[i][j] = 1+res[i-1][j-1]
+            else: 
+                # Characters don't match, take the maximum from:
+                # res[i][j-1] = LCS when we exclude current character from text2
+                # res[i-1][j] = LCS when we exclude current character from text1
+                res[i][j] = max(res[i][j-1],res[i-1][j])
+    
+    # Return the length of LCS for the entire strings
+    return(res[m][n])
 ```
 
-#### JavaScript
+## JavaScript
 ```javascript
+/**
+ * @param {string} text1 - First input string
+ * @param {string} text2 - Second input string
+ * @return {number} - Length of longest common subsequence
+ */
 function longestCommonSubsequence(text1, text2) {
-    const dp = Array(text1.length + 1).fill().map(() => Array(text2.length + 1).fill(0));
+    // m = length of first string
+    const m = text1.length;
+    // n = length of second string
+    const n = text2.length;
     
-    for (let i = text1.length - 1; i >= 0; i--) {
-        for (let j = text2.length - 1; j >= 0; j--) {
-            if (text1[i] === text2[j]) {
-                dp[i][j] = 1 + dp[i + 1][j + 1];
+    // Create a 2D array of size (m+1)x(n+1) filled with zeros
+    // res[i][j] will store the length of LCS of text1[0...i-1] and text2[0...j-1]
+    const res = Array(m+1).fill().map(() => Array(n+1).fill(0));
+    
+    // Iterate through each character of text1
+    for (let i = 1; i <= m; i++) { // i represents position in text1 (1-indexed for dp array)
+        // Iterate through each character of text2
+        for (let j = 1; j <= n; j++) { // j represents position in text2 (1-indexed for dp array)
+            // If current characters match
+            // text1[i-1] is the current character in text1 (0-indexed in the string)
+            // text2[j-1] is the current character in text2 (0-indexed in the string)
+            if (text1[i-1] === text2[j-1]) {
+                // Add 1 to the LCS of the strings without these characters
+                // res[i-1][j-1] = LCS without the current character from both strings
+                res[i][j] = 1 + res[i-1][j-1];
             } else {
-                dp[i][j] = Math.max(dp[i][j + 1], dp[i + 1][j]);
+                // Characters don't match, take the maximum from:
+                // res[i][j-1] = LCS when we exclude current character from text2
+                // res[i-1][j] = LCS when we exclude current character from text1
+                res[i][j] = Math.max(res[i][j-1], res[i-1][j]);
             }
         }
     }
     
-    return dp[0][0];
+    // Return the length of LCS for the entire strings
+    return res[m][n];
 }
 ```
 
-#### Java
+## Java
 ```java
-public int longestCommonSubsequence(String text1, String text2) {
-    int[][] dp = new int[text1.length() + 1][text2.length() + 1];
-    
-    for (int i = text1.length() - 1; i >= 0; i--) {
-        for (int j = text2.length() - 1; j >= 0; j--) {
-            if (text1.charAt(i) == text2.charAt(j)) {
-                dp[i][j] = 1 + dp[i + 1][j + 1];
-            } else {
-                dp[i][j] = Math.max(dp[i][j + 1], dp[i + 1][j]);
+class Solution {
+    /**
+     * Find the length of the Longest Common Subsequence of two strings
+     * 
+     * @param text1 First input string
+     * @param text2 Second input string
+     * @return Length of longest common subsequence
+     */
+    public int longestCommonSubsequence(String text1, String text2) {
+        // m = length of first string
+        int m = text1.length();
+        // n = length of second string
+        int n = text2.length();
+        
+        // Create a 2D array of size (m+1)x(n+1) filled with zeros
+        // res[i][j] will store the length of LCS of text1[0...i-1] and text2[0...j-1]
+        int[][] res = new int[m+1][n+1];
+        
+        // Iterate through each character of text1
+        for (int i = 1; i <= m; i++) { // i represents position in text1 (1-indexed for dp array)
+            // Iterate through each character of text2
+            for (int j = 1; j <= n; j++) { // j represents position in text2 (1-indexed for dp array)
+                // If current characters match
+                // text1.charAt(i-1) is the current character in text1 (0-indexed in the string)
+                // text2.charAt(j-1) is the current character in text2 (0-indexed in the string)
+                if (text1.charAt(i-1) == text2.charAt(j-1)) {
+                    // Add 1 to the LCS of the strings without these characters
+                    // res[i-1][j-1] = LCS without the current character from both strings
+                    res[i][j] = 1 + res[i-1][j-1];
+                } else {
+                    // Characters don't match, take the maximum from:
+                    // res[i][j-1] = LCS when we exclude current character from text2
+                    // res[i-1][j] = LCS when we exclude current character from text1
+                    res[i][j] = Math.max(res[i][j-1], res[i-1][j]);
+                }
             }
         }
+        
+        // Return the length of LCS for the entire strings
+        return res[m][n];
     }
-    
-    return dp[0][0];
 }
 ```
 
