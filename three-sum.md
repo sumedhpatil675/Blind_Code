@@ -168,141 +168,119 @@ class Solution {
 * Time complexity: O(n²)
 * Space complexity: O(1) excluding the output
 
-#### Python
+## Python Implementation
+
 ```python
-class Solution:
-    def threeSum(self, nums: List[int]) -> List[List[int]]:
-        res = []
-        nums.sort()
+def threeSum(nums):
+    res = []
+    nums.sort()
+    
+    for i, a in enumerate(nums):
+        # Skip duplicate values for the first element
+        if i > 0 and a == nums[i-1]:
+            continue
+            
+        l, r = i+1, len(nums)-1
         
-        for i, a in enumerate(nums):
-            # Skip positive numbers (can't sum to zero with three positives)
-            if a > 0:
-                break
-                
-            # Skip duplicates for i
-            if i > 0 and a == nums[i - 1]:
-                continue
-                
-            # Two Sum II approach with two pointers
-            l, r = i + 1, len(nums) - 1
-            while l < r:
-                threeSum = a + nums[l] + nums[r]
-                
-                if threeSum > 0:
-                    r -= 1
-                elif threeSum < 0:
+        while l < r:
+            threeSum = a + nums[l] + nums[r]
+            
+            if threeSum < 0:
+                l += 1
+            elif threeSum > 0:
+                r -= 1
+            else:
+                res.append([a, nums[l], nums[r]])
+                l += 1
+                # Skip duplicate values for the second element
+                while nums[l] == nums[l-1] and l < r:
                     l += 1
-                else:
-                    res.append([a, nums[l], nums[r]])
-                    l += 1
-                    r -= 1
                     
-                    # Skip duplicates for l
-                    while l < r and nums[l] == nums[l - 1]:
-                        l += 1
-                        
-        return res
+    return res
 ```
 
-#### JavaScript
+## JavaScript Implementation
+
 ```javascript
-var threeSum = function(nums) {
-    const result = [];
+/**
+ * @param {number[]} nums
+ * @return {number[][]}
+ */
+function threeSum(nums) {
+    const res = [];
     nums.sort((a, b) => a - b);
     
-    for (let i = 0; i < nums.length - 2; i++) {
-        // Skip positive numbers (can't sum to zero with three positives)
-        if (nums[i] > 0) {
-            break;
-        }
-        
-        // Skip duplicates for i
+    for (let i = 0; i < nums.length; i++) {
+        // Skip duplicate values for the first element
         if (i > 0 && nums[i] === nums[i-1]) {
             continue;
         }
         
-        // Two Sum II approach with two pointers
-        let left = i + 1;
-        let right = nums.length - 1;
+        let l = i + 1;
+        let r = nums.length - 1;
         
-        while (left < right) {
-            const sum = nums[i] + nums[left] + nums[right];
+        while (l < r) {
+            const sum = nums[i] + nums[l] + nums[r];
             
             if (sum < 0) {
-                left++;
+                l++;
             } else if (sum > 0) {
-                right--;
+                r--;
             } else {
-                result.push([nums[i], nums[left], nums[right]]);
-                left++;
-                right--;
-                
-                // Skip duplicates for left
-                while (left < right && nums[left] === nums[left-1]) {
-                    left++;
-                }
-                
-                // Skip duplicates for right
-                while (left < right && nums[right] === nums[right+1]) {
-                    right--;
+                res.push([nums[i], nums[l], nums[r]]);
+                l++;
+                // Skip duplicate values for the second element
+                while (nums[l] === nums[l-1] && l < r) {
+                    l++;
                 }
             }
         }
     }
     
-    return result;
-};
+    return res;
+}
 ```
 
-#### Java
+## Java Implementation
+
 ```java
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 class Solution {
     public List<List<Integer>> threeSum(int[] nums) {
-        List<List<Integer>> result = new ArrayList<>();
+        List<List<Integer>> res = new ArrayList<>();
         Arrays.sort(nums);
         
-        for (int i = 0; i < nums.length - 2; i++) {
-            // Skip positive numbers (can't sum to zero with three positives)
-            if (nums[i] > 0) {
-                break;
-            }
-            
-            // Skip duplicates for i
+        for (int i = 0; i < nums.length; i++) {
+            // Skip duplicate values for the first element
             if (i > 0 && nums[i] == nums[i-1]) {
                 continue;
             }
             
-            // Two Sum II approach with two pointers
-            int left = i + 1;
-            int right = nums.length - 1;
+            int l = i + 1;
+            int r = nums.length - 1;
             
-            while (left < right) {
-                int sum = nums[i] + nums[left] + nums[right];
+            while (l < r) {
+                int sum = nums[i] + nums[l] + nums[r];
                 
                 if (sum < 0) {
-                    left++;
+                    l++;
                 } else if (sum > 0) {
-                    right--;
+                    r--;
                 } else {
-                    result.add(Arrays.asList(nums[i], nums[left], nums[right]));
-                    left++;
-                    right--;
-                    
-                    // Skip duplicates for left
-                    while (left < right && nums[left] == nums[left-1]) {
-                        left++;
-                    }
-                    
-                    // Skip duplicates for right
-                    while (left < right && nums[right] == nums[right+1]) {
-                        right--;
+                    res.add(Arrays.asList(nums[i], nums[l], nums[r]));
+                    l++;
+                    // Skip duplicate values for the second element
+                    while (l < r && nums[l] == nums[l-1]) {
+                        l++;
                     }
                 }
             }
         }
         
-        return result;
+        return res;
     }
 }
 ```
