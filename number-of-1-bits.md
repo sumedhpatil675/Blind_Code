@@ -48,12 +48,40 @@ public int hammingWeight(int n) {
 - **Time complexity**: O(1)
 - **Space complexity**: O(1)
 
+## Step-by-Step Breakdown
+
+1. **Checking the rightmost bit**:
+   - If n is odd → n % 2 → gives 1 (represents the rightmost bit)
+   - If n is even → n % 2 → gives 0 (represents the rightmost bit)
+   - We add this value (0 or 1) to our result counter `res`
+
+2. **Discarding the processed bit**:
+   - We use `n >> 1` to right-shift the number, effectively removing the rightmost bit
+   - This prepares the next bit for examination in the next iteration
+
+3. **Repeat until done**:
+   - The process continues until n becomes 0 (no more bits to examine)
+
+## Example: n = 11 (binary: 1011)
+
+| Iteration | n (decimal) | n (binary) | n % 2 | res |
+|-----------|-------------|------------|-------|-----|
+| Initial   | 11          | 1011       | -     | 0   |
+| 1         | 11          | 1011       | 1     | 1   |
+| 2         | 5           | 101        | 1     | 2   |
+| 3         | 2           | 10         | 0     | 2   |
+| 4         | 1           | 1          | 1     | 3   |
+| 5         | 0           | 0          | -     | 3   |
+
+Final result: 3 (which is the number of 1s in the binary representation of 11)
+
+
 #### Python
 ```python
 def hammingWeight(n):
     res = 0
     while n:
-        res += n & 1
+        res += n %2 
         n >>= 1
     return res
 ```
@@ -63,7 +91,7 @@ def hammingWeight(n):
 function hammingWeight(n) {
     let res = 0;
     while (n !== 0) {
-        res += n & 1;
+        res += n % 2;
         n >>>= 1;  // Unsigned right shift
     }
     return res;
@@ -75,7 +103,7 @@ function hammingWeight(n) {
 public int hammingWeight(int n) {
     int res = 0;
     while (n != 0) {
-        res += n & 1;
+        res += n % 2;
         n >>>= 1;  // Unsigned right shift
     }
     return res;
