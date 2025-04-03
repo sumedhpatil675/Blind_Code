@@ -155,6 +155,7 @@ private int dfs(String text1, String text2, int i, int j, int[][] memo) {
 ### 3. Dynamic Programming (Bottom-Up)
 - **Time complexity**: O(m*n)
 - **Space complexity**: O(m*n)
+- 
 
 ## Python
 ```python
