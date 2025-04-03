@@ -198,9 +198,7 @@ class Solution {
 
 ### 3. Dynamic Programming (Bottom-Up)
 
-#### Using 2-D DP
-
-# Coin Change Problem Implementations
+### Using 2-D DP
 
 ## Python
 ```python
