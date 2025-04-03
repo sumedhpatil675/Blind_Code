@@ -155,6 +155,31 @@ private int dfs(String text1, String text2, int i, int j, int[][] memo) {
 ### 3. Dynamic Programming (Bottom-Up)
 - **Time complexity**: O(m*n)
 - **Space complexity**: O(m*n)
+
+# Longest Common Subsequence DP Table
+
+**Example**: text1 = "ABCDE", text2 = "ACE"
+
+```
+      |     |  A  |  C  |  E  |
+------|-----|-----|-----|-----|
+      |  0  |  0  |  0  |  0  |
+------|-----|-----|-----|-----|
+  A   |  0  |  1* |  1  |  1  |
+------|-----|-----|-----|-----|
+  B   |  0  |  1  |  1  |  1  |
+------|-----|-----|-----|-----|
+  C   |  0  |  1  |  2* |  2  |
+------|-----|-----|-----|-----|
+  D   |  0  |  1  |  2  |  2  |
+------|-----|-----|-----|-----|
+  E   |  0  |  1  |  2  |  3* |
+------|-----|-----|-----|-----|
+```
+
+*\* Indicates a character match (diagonal + 1)*
+
+**Result**: LCS length = 3 (The sequence is "ACE")
 - 
 
 ## Python
