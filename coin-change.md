@@ -198,7 +198,16 @@ class Solution {
 
 ### 3. Dynamic Programming (Bottom-Up)
 
+
+
 ### Using 2-D DP
+
+## Time and Space Complexity
+- **Time Complexity**: O(n × amount), where n is the number of coins
+  - This is because we have nested loops: one iterating through all coin types (n) and the other through all amounts (amount)
+    
+- **Space Complexity**: O(n × amount)
+  - We use a 2D array of size (n+1) × (amount+1)
 
 ## Python
 ```python
