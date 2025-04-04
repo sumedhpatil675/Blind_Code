@@ -217,20 +217,22 @@ class Solution {
 ```python
 class Solution:
     def numDecodings(self, s: str) -> int:
-        dp = {len(s): 1}
-        
-        for i in range(len(s) - 1, -1, -1):
-            if s[i] == "0":
-                dp[i] = 0
-            else:
-                dp[i] = dp[i + 1]
-                
-            if i + 1 < len(s) and (s[i] == "1" or
-                                  s[i] == "2" and s[i + 1] in "0123456"
-                                 ):
-                dp[i] += dp[i + 2]
-                
-        return dp[0]
+        if len(s)==0 or s[0] =='0':
+            return 0
+        dp = [0]*(len(s)+1)
+        dp[0] = 1
+        dp[1] = 1
+        for i in range(2,len(s)+1):
+            if s[i-1]>='1' and s[i-1]<='9':  ##counting for all single char
+                dp[i] = dp[i-1]
+                       
+            if s[i-2]=='1':  ## counting for 10-19 digits
+                dp[i] += dp[i-2]
+            elif (s[i-2]=='2' and (s[i-1]>='0' and s[i-1]<='6')):
+                ## adding for 20 to 26
+                dp[i] += dp[i-2]
+                   
+        return(dp[len(s)])
 ```
 
 #### JavaScript
@@ -240,24 +242,31 @@ class Solution:
  * @return {number}
  */
 var numDecodings = function(s) {
-    const dp = new Array(s.length + 1);
-    dp[s.length] = 1;
+    if (s.length === 0 || s[0] === '0') {
+        return 0;
+    }
     
-    for (let i = s.length - 1; i >= 0; i--) {
-        if (s[i] === '0') {
-            dp[i] = 0;
-        } else {
-            dp[i] = dp[i + 1];
-            
-            if (i + 1 < s.length) {
-                if (s[i] === '1' || (s[i] === '2' && s[i + 1] <= '6')) {
-                    dp[i] += dp[i + 2];
-                }
-            }
+    const dp = new Array(s.length + 1).fill(0);
+    dp[0] = 1;
+    dp[1] = 1;
+    
+    for (let i = 2; i <= s.length; i++) {
+        // counting for all single char
+        if (s[i-1] >= '1' && s[i-1] <= '9') {
+            dp[i] = dp[i-1];
+        }
+        
+        // counting for 10-19 digits
+        if (s[i-2] === '1') {
+            dp[i] += dp[i-2];
+        } 
+        // adding for 20 to 26
+        else if (s[i-2] === '2' && s[i-1] >= '0' && s[i-1] <= '6') {
+            dp[i] += dp[i-2];
         }
     }
     
-    return dp[0];
+    return dp[s.length];
 };
 ```
 
@@ -265,26 +274,31 @@ var numDecodings = function(s) {
 ```java
 class Solution {
     public int numDecodings(String s) {
-        int n = s.length();
-        int[] dp = new int[n + 1];
-        dp[n] = 1;
+        if (s.length() == 0 || s.charAt(0) == '0') {
+            return 0;
+        }
         
-        for (int i = n - 1; i >= 0; i--) {
-            if (s.charAt(i) == '0') {
-                dp[i] = 0;
-            } else {
-                dp[i] = dp[i + 1];
-                
-                if (i + 1 < n) {
-                    if (s.charAt(i) == '1' || 
-                        (s.charAt(i) == '2' && s.charAt(i + 1) <= '6')) {
-                        dp[i] += dp[i + 2];
-                    }
-                }
+        int[] dp = new int[s.length() + 1];
+        dp[0] = 1;
+        dp[1] = 1;
+        
+        for (int i = 2; i <= s.length(); i++) {
+            // counting for all single char
+            if (s.charAt(i-1) >= '1' && s.charAt(i-1) <= '9') {
+                dp[i] = dp[i-1];
+            }
+            
+            // counting for 10-19 digits
+            if (s.charAt(i-2) == '1') {
+                dp[i] += dp[i-2];
+            } 
+            // adding for 20 to 26
+            else if (s.charAt(i-2) == '2' && s.charAt(i-1) >= '0' && s.charAt(i-1) <= '6') {
+                dp[i] += dp[i-2];
             }
         }
         
-        return dp[0];
+        return dp[s.length()];
     }
 }
 ```
