@@ -234,8 +234,6 @@ class Solution:
                    
         return(dp[len(s)])
 ```
-# Corrected DP Array Visualization for Decode Ways
-
 Let's visualize the DP array for the input string `"12345"` using ASCII characters, with correct handling of valid digit combinations.
 
 ## Input: "12345"
