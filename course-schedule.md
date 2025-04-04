@@ -52,6 +52,168 @@ class Solution:
         return True
 ```
 
+# Course Schedule Problem Explanation
+
+## The Problem
+
+The Course Schedule problem asks whether it's possible to finish all courses, given the prerequisites for each course. This is essentially checking for cycles in a directed graph, where:
+- Each course is a node
+- Each prerequisite is a directed edge
+
+## The Solution
+
+```python
+def canFinish(numCourses, prerequisites):
+    preMap = {i:[] for i in range(numCourses)}
+    for crs, pre in prerequisites:
+        preMap[crs].append(pre)
+    
+    # visitSet = all courses along the curr DFS path
+    visitSet = set()
+    
+    def dfs(crs):
+        if crs in visitSet:
+            return False
+        if preMap[crs] == []:
+            return True
+            
+        visitSet.add(crs)
+        for pre in preMap[crs]:
+            if not dfs(pre): return False
+        visitSet.remove(crs)
+        preMap[crs] = []
+        return True
+    
+    for crs in range(numCourses):
+        if not dfs(crs): return False
+    return True
+```
+
+## Example with Cycle
+
+Let's trace through an example with a cycle:
+- `numCourses = 3`
+- `prerequisites = [[0,1], [1,2], [2,0]]` (0 depends on 1, 1 depends on 2, 2 depends on 0)
+
+### Initial State
+
+```
+preMap = {
+    0: [1],  # To take course 0, you need course 1
+    1: [2],  # To take course 1, you need course 2
+    2: [0]   # To take course 2, you need course 0
+}
+
+visitSet = {}  # Empty set
+```
+
+### DFS Execution Trace
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ Function Call Stack      │ visitSet      │ Action           │
+├────────────────────────────────────────────────────────────-┤
+│ dfs(0)                   │ {}            │ Check for cycle  │
+│ dfs(0)                   │ {0}           │ Add 0 to path    │
+│ dfs(0) → dfs(1)          │ {0}           │ Check prereq 1   │
+│ dfs(0) → dfs(1)          │ {0,1}         │ Add 1 to path    │
+│ dfs(0) → dfs(1) → dfs(2) │ {0,1}         │ Check prereq 2   │
+│ dfs(0) → dfs(1) → dfs(2) │ {0,1,2}       │ Add 2 to path    │
+│ dfs(0) → dfs(1) → dfs(2) │ {0,1,2}       │ Check prereq 0   │
+│ → dfs(0)                 │               │                  │
+└─────────────────────────────────────────────────────────────┘
+```
+
+At this point, DFS(0) is called again, but 0 is already in the visitSet, so we detect a cycle and return False.
+
+### Visualization of the Cycle
+
+```
+    ┌───┐
+    │ 0 │
+    └───┘
+     ▲ │
+     │ ▼
+┌───┐   ┌───┐
+│ 2 │◄──┤ 1 │
+└───┘   └───┘
+```
+
+## Example Without Cycle
+
+Let's try another example:
+- `numCourses = 3`
+- `prerequisites = [[0,1], [1,2]]` (0 depends on 1, 1 depends on 2)
+
+### Initial State
+
+```
+preMap = {
+    0: [1],  # To take course 0, you need course 1
+    1: [2],  # To take course 1, you need course 2
+    2: []    # No prerequisites for course 2
+}
+
+visitSet = {}  # Empty set
+```
+
+### DFS Execution Trace
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Function Call Stack      │ visitSet      │ preMap                │ Action               │
+├────────────────────────────────────────────────────────────────────────-┤
+│ dfs(0)                   │ {}            │ {0:[1], 1:[2], 2:[]}  │ Check for cycle      │
+│ dfs(0)                   │ {0}           │ {0:[1], 1:[2], 2:[]}  │ Add 0 to path        │
+│ dfs(0) → dfs(1)          │ {0}           │ {0:[1], 1:[2], 2:[]}  │ Check prereq 1       │
+│ dfs(0) → dfs(1)          │ {0,1}         │ {0:[1], 1:[2], 2:[]}  │ Add 1 to path        │
+│ dfs(0) → dfs(1) → dfs(2) │ {0,1}         │ {0:[1], 1:[2], 2:[]}  │ Check prereq 2       │
+│ dfs(0) → dfs(1) → dfs(2) │ {0,1,2}       │ {0:[1], 1:[2], 2:[]}  │ Add 2 to path        │
+│ dfs(0) → dfs(1) → dfs(2) │ {0,1,2}       │ {0:[1], 1:[2], 2:[]}  │ Empty prereq list    │
+│ dfs(0) → dfs(1) → dfs(2) │ {0,1,2}       │ {0:[1], 1:[2], 2:[]}  │ Return True          │
+│ dfs(0) → dfs(1)          │ {0,1}         │ {0:[1], 1:[], 2:[]}   │ Clear 2's prereqs    │
+│ dfs(0) → dfs(1)          │ {0,1}         │ {0:[1], 1:[], 2:[]}   │ Return True          │
+│ dfs(0)                   │ {0}           │ {0:[], 1:[], 2:[]}    │ Clear 1's prereqs    │
+│ dfs(0)                   │ {0}           │ {0:[], 1:[], 2:[]}    │ Return True          │
+│ Main function            │ {}            │ {0:[], 1:[], 2:[]}    │ Clear 0's prereqs    │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+The DFS for each course returns True, so all courses can be completed.
+
+### Visualization of the Valid Course Order
+
+```
+┌───┐   ┌───┐   ┌───┐
+│ 0 │◄──┤ 1 │◄──┤ 2 │
+└───┘   └───┘   └───┘
+
+Take in order: 2 → 1 → 0
+```
+
+## Understanding the Key Components
+
+1. **preMap**: Adjacency list representing prerequisite relationships
+   - Maps each course to the list of courses it depends on
+
+2. **visitSet**: Tracks the current DFS path
+   - Used to detect cycles (if we encounter a course already in the path)
+
+3. **DFS function**:
+   - If a course is in visitSet → Cycle detected → Return False
+   - If a course has no prerequisites → Can be completed → Return True
+   - Otherwise → Explore prerequisites recursively
+   - After exploration → Mark as completed by emptying its prerequisite list
+
+4. **Optimization**:
+   - After successfully processing a course, we empty its prerequisite list
+   - This acts as memoization, avoiding repeated computations
+
+## Time and Space Complexity
+
+- **Time Complexity**: O(V + E) where V is the number of courses and E is the number of prerequisite relationships
+- **Space Complexity**: O(V + E) for the adjacency list and the recursion stack
+
 #### JavaScript
 ```javascript
 /**
