@@ -52,42 +52,6 @@ class Solution:
         return True
 ```
 
-# Course Schedule Problem Explanation
-
-## The Problem
-
-The Course Schedule problem asks whether it's possible to finish all courses, given the prerequisites for each course. This is essentially checking for cycles in a directed graph, where:
-- Each course is a node
-- Each prerequisite is a directed edge
-
-## The Solution
-
-```python
-def canFinish(numCourses, prerequisites):
-    preMap = {i:[] for i in range(numCourses)}
-    for crs, pre in prerequisites:
-        preMap[crs].append(pre)
-    
-    # visitSet = all courses along the curr DFS path
-    visitSet = set()
-    
-    def dfs(crs):
-        if crs in visitSet:
-            return False
-        if preMap[crs] == []:
-            return True
-            
-        visitSet.add(crs)
-        for pre in preMap[crs]:
-            if not dfs(pre): return False
-        visitSet.remove(crs)
-        preMap[crs] = []
-        return True
-    
-    for crs in range(numCourses):
-        if not dfs(crs): return False
-    return True
-```
 
 ## Example with Cycle
 
@@ -209,10 +173,6 @@ Take in order: 2 → 1 → 0
    - After successfully processing a course, we empty its prerequisite list
    - This acts as memoization, avoiding repeated computations
 
-## Time and Space Complexity
-
-- **Time Complexity**: O(V + E) where V is the number of courses and E is the number of prerequisite relationships
-- **Space Complexity**: O(V + E) for the adjacency list and the recursion stack
 
 ```javascript
 /**
@@ -282,7 +242,7 @@ function canFinish(numCourses, prerequisites) {
 }
 ```
 
-## Java Implementation
+## Java 
 
 ```java
 import java.util.*;
