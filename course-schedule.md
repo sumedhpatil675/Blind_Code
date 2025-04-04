@@ -173,6 +173,7 @@ Take in order: 2 → 1 → 0
    - After successfully processing a course, we empty its prerequisite list
    - This acts as memoization, avoiding repeated computations
 
+#### Javascript
 
 ```javascript
 /**
@@ -242,7 +243,7 @@ function canFinish(numCourses, prerequisites) {
 }
 ```
 
-## Java 
+#### Java 
 
 ```java
 import java.util.*;
