@@ -234,6 +234,224 @@ class Solution:
                    
         return(dp[len(s)])
 ```
+# Corrected DP Array Visualization for Decode Ways
+
+Let's visualize the DP array for the input string `"12345"` using ASCII characters, with correct handling of valid digit combinations.
+
+## Input: "12345"
+
+```
+Index:  0  1  2  3  4  5  
+String:    1  2  3  4  5  
+DP:     1  1  ?  ?  ?  ?  
+```
+
+Initial setup:
+- dp[0] = 1 (base case)
+- dp[1] = 1 (since s[0] = '1' which is a valid single digit)
+
+Let's fill the dp array step by step:
+
+### Step 1: Fill dp[2]
+
+For dp[2], we need to check:
+1. Is s[1] a valid single digit? Yes, s[1] = '2', so dp[2] += dp[1] = 1
+2. Is s[0]s[1] = "12" a valid double digit? Yes, "12" is valid (10-26), so dp[2] += dp[0] = 1
+
+```
+Index:  0  1  2  3  4  5  
+String:    1  2  3  4  5  
+DP:     1  1  2  ?  ?  ?  
+         ↑  ↑  
+         |  |  
+         |  +-- Valid single digit: '2'
+         +---- Valid double digit: "12"
+```
+
+### Step 2: Fill dp[3]
+
+For dp[3], we need to check:
+1. Is s[2] a valid single digit? Yes, s[2] = '3', so dp[3] += dp[2] = 2
+2. Is s[1]s[2] = "23" a valid double digit? Yes, "23" is valid (10-26), so dp[3] += dp[1] = 1
+
+```
+Index:  0  1  2  3  4  5  
+String:    1  2  3  4  5  
+DP:     1  1  2  3  ?  ?  
+            ↑  ↑  
+            |  |  
+            |  +-- Valid single digit: '3'
+            +---- Valid double digit: "23"
+```
+
+### Step 3: Fill dp[4]
+
+For dp[4], we need to check:
+1. Is s[3] a valid single digit? Yes, s[3] = '4', so dp[4] += dp[3] = 3
+2. Is s[2]s[3] = "34" a valid double digit? No, "34" is NOT valid (>26)
+
+```
+Index:  0  1  2  3  4  5  
+String:    1  2  3  4  5  
+DP:     1  1  2  3  3  ?  
+               ↑  
+               |  
+               +-- Only valid as single digit: '4'
+```
+
+### Step 4: Fill dp[5]
+
+For dp[5], we need to check:
+1. Is s[4] a valid single digit? Yes, s[4] = '5', so dp[5] += dp[4] = 3
+2. Is s[3]s[4] = "45" a valid double digit? No, "45" is NOT valid (>26)
+
+```
+Index:  0  1  2  3  4  5  
+String:    1  2  3  4  5  
+DP:     1  1  2  3  3  3  
+                  ↑  
+                  |  
+                  +-- Only valid as single digit: '5'
+```
+
+Therefore, there are 3 ways to decode the string "12345".
+
+## Let's try another example: "226"
+
+```
+Index:  0  1  2  3  
+String:    2  2  6  
+DP:     1  1  ?  ?  
+```
+
+Initial setup:
+- dp[0] = 1 (base case)
+- dp[1] = 1 (since s[0] = '2' which is a valid single digit)
+
+### Step 1: Fill dp[2]
+
+For dp[2], we need to check:
+1. Is s[1] a valid single digit? Yes, s[1] = '2', so dp[2] += dp[1] = 1
+2. Is s[0]s[1] = "22" a valid double digit? Yes, "22" is valid (10-26), so dp[2] += dp[0] = 1
+
+```
+Index:  0  1  2  3  
+String:    2  2  6  
+DP:     1  1  2  ?  
+         ↑  ↑  
+         |  |  
+         |  +-- Valid single digit: '2'
+         +---- Valid double digit: "22"
+```
+
+### Step 2: Fill dp[3]
+
+For dp[3], we need to check:
+1. Is s[2] a valid single digit? Yes, s[2] = '6', so dp[3] += dp[2] = 2
+2. Is s[1]s[2] = "26" a valid double digit? Yes, "26" is valid (=26), so dp[3] += dp[1] = 1
+
+```
+Index:  0  1  2  3  
+String:    2  2  6  
+DP:     1  1  2  3  
+            ↑  ↑  
+            |  |  
+            |  +-- Valid single digit: '6'
+            +---- Valid double digit: "26"
+```
+
+Therefore, there are 3 ways to decode the string "226".
+
+## Example with a zero: "1201"
+
+```
+Index:  0  1  2  3  4  
+String:    1  2  0  1  
+DP:     1  1  ?  ?  ?  
+```
+
+### Step 1: Fill dp[2]
+
+For dp[2], we need to check:
+1. Is s[1] a valid single digit? Yes, s[1] = '2', so dp[2] += dp[1] = 1
+2. Is s[0]s[1] = "12" a valid double digit? Yes, "12" is valid (10-26), so dp[2] += dp[0] = 1
+
+```
+Index:  0  1  2  3  4  
+String:    1  2  0  1  
+DP:     1  1  2  ?  ?  
+```
+
+### Step 2: Fill dp[3]
+
+For dp[3], we need to check:
+1. Is s[2] a valid single digit? No, s[2] = '0', so no addition here
+2. Is s[1]s[2] = "20" a valid double digit? Yes, "20" is valid (10-26), so dp[3] += dp[1] = 1
+
+```
+Index:  0  1  2  3  4  
+String:    1  2  0  1  
+DP:     1  1  2  1  ?  
+            ↑     
+            |     
+            +---- Only valid as double digit: "20"
+```
+
+### Step 3: Fill dp[4]
+
+For dp[4], we need to check:
+1. Is s[3] a valid single digit? Yes, s[3] = '1', so dp[4] += dp[3] = 1
+2. Is s[2]s[3] = "01" a valid double digit? No, "01" is not valid due to leading zero
+
+```
+Index:  0  1  2  3  4  
+String:    1  2  0  1  
+DP:     1  1  2  1  1  
+               ↑     
+               |     
+               +---- Valid single digit: '1'
+```
+
+Therefore, there is only 1 way to decode the string "1201".
+
+## One more example: "121"
+
+```
+Index:  0  1  2  3  
+String:    1  2  1  
+DP:     1  1  ?  ?  
+```
+
+### Step 1: Fill dp[2]
+
+For dp[2], we need to check:
+1. Is s[1] a valid single digit? Yes, s[1] = '2', so dp[2] += dp[1] = 1
+2. Is s[0]s[1] = "12" a valid double digit? Yes, "12" is valid (10-26), so dp[2] += dp[0] = 1
+
+```
+Index:  0  1  2  3  
+String:    1  2  1  
+DP:     1  1  2  ?  
+```
+
+### Step 2: Fill dp[3]
+
+For dp[3], we need to check:
+1. Is s[2] a valid single digit? Yes, s[2] = '1', so dp[3] += dp[2] = 2
+2. Is s[1]s[2] = "21" a valid double digit? Yes, "21" is valid (10-26), so dp[3] += dp[1] = 1
+
+```
+Index:  0  1  2  3  
+String:    1  2  1  
+DP:     1  1  2  3  
+            ↑  ↑  
+            |  |  
+            |  +-- Valid single digit: '1'
+            +---- Valid double digit: "21"
+```
+
+Therefore, there are 3 ways to decode the string "121".
+
 
 #### JavaScript
 ```javascript
