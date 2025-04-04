@@ -6,7 +6,9 @@ Given a string s and a dictionary of strings wordDict, return true if s can be s
 
 ### 1. Recursion
 - **Time complexity**: O(2^n)
+  - n is the length of the string s
 - **Space complexity**: O(n)
+  - n is the length of the string s (recursion stack depth)
 
 #### Python
 ```python
@@ -68,12 +70,11 @@ private boolean dfs(String s, List<String> wordDict, int start) {
 
 ### 2. Dynamic Programming (Top-Down)
 - **Time complexity**: O(n * m * t)
+  - n is the length of the string s
+  - m is the number of words in wordDict
+  - t is the maximum length of any word in wordDict
 - **Space complexity**: O(n)
-
-Where:
-- n is the length of the string s
-- m is the number of words in wordDict
-- t is the maximum length of any word in wordDict
+  - n is the length of the string s (memoization array size)
 
 #### Python
 ```python
@@ -155,7 +156,11 @@ private boolean dfs(String s, List<String> wordDict, int start, Map<Integer, Boo
 
 ### 3. Dynamic Programming (Bottom-Up)
 - **Time complexity**: O(n * m * t)
+  - n is the length of the string s
+  - m is the number of words in wordDict
+  - t is the maximum length of any word in wordDict
 - **Space complexity**: O(n)
+  - n is the length of the string s (DP array size)
 
 #### Python
 ```python
@@ -164,7 +169,8 @@ def wordBreak(s, wordDict):
     dp[len(s)] = True
     for i in range(len(s) - 1, -1, -1):
         for w in wordDict:
-            if (i + len(w)) <= len(s) and s[i : i + len(w)] == w:
+            extractedWord = s[i:i+len(w)]
+            if (i + len(w)) <= len(s) and extractedWord == w:
                 dp[i] = dp[i + len(w)]
             if dp[i]:
                 break
@@ -179,7 +185,8 @@ function wordBreak(s, wordDict) {
     
     for (let i = s.length - 1; i >= 0; i--) {
         for (const word of wordDict) {
-            if (i + word.length <= s.length && s.substring(i, i + word.length) === word) {
+            const extractedWord = s.substring(i, i + word.length);
+            if (i + word.length <= s.length && extractedWord === word) {
                 dp[i] = dp[i + word.length];
                 if (dp[i]) break;
             }
@@ -197,8 +204,9 @@ public boolean wordBreak(String s, List<String> wordDict) {
     
     for (int i = s.length() - 1; i >= 0; i--) {
         for (String word : wordDict) {
-            if (i + word.length() <= s.length() && 
-                s.substring(i, i + word.length()).equals(word)) {
+            String extractedWord = i + word.length() <= s.length() ? 
+                                  s.substring(i, i + word.length()) : "";
+            if (i + word.length() <= s.length() && extractedWord.equals(word)) {
                 dp[i] = dp[i + word.length()];
                 if (dp[i]) break;
             }
@@ -208,14 +216,89 @@ public boolean wordBreak(String s, List<String> wordDict) {
 }
 ```
 
+## DP Table Visualization
+
+Let's visualize how the DP table gets populated for the input string `"leetcode"` with wordDict = ["leet", "code"].
+
+```
+String: l e e t c o d e
+Index:  0 1 2 3 4 5 6 7 8
+        
+DP[8] = true (base case for empty string)
+```
+
+Starting from index 7 (last character 'e'):
+```
+Index:  0 1 2 3 4 5 6 7 8
+String: l e e t c o d e
+DP:     ? ? ? ? ? ? ? ? T
+```
+
+Checking index 7 (character 'e'):
+- "e" is not in wordDict
+- After checking all words, dp[7] remains false
+
+```
+Index:  0 1 2 3 4 5 6 7 8
+String: l e e t c o d e
+DP:     ? ? ? ? ? ? ? F T
+```
+
+Checking index 6 (character 'd'):
+- "d" is not in wordDict
+- After checking all words, dp[6] remains false
+
+```
+Index:  0 1 2 3 4 5 6 7 8
+String: l e e t c o d e
+DP:     ? ? ? ? ? ? F F T
+```
+
+Continuing for each index...
+
+Checking index 4 (character 'c'):
+- Check "code" (from index 4 to 7)
+- extractedWord = "code", which matches a word in wordDict
+- dp[4] = dp[4 + 4] = dp[8] = true
+
+```
+Index:  0 1 2 3 4 5 6 7 8
+String: l e e t c o d e
+DP:     ? ? ? ? T F F F T
+```
+
+Checking index 3 (character 't'):
+- No matching word starts at this position
+
+```
+Index:  0 1 2 3 4 5 6 7 8
+String: l e e t c o d e
+DP:     ? ? ? F T F F F T
+```
+
+Checking index 0 (character 'l'):
+- Check "leet" (from index 0 to 3)
+- extractedWord = "leet", which matches a word in wordDict
+- dp[0] = dp[0 + 4] = dp[4] = true
+
+Final DP table:
+```
+Index:  0 1 2 3 4 5 6 7 8
+String: l e e t c o d e
+DP:     T F F F T F F F T
+```
+
+Since dp[0] is true, the string "leetcode" can be segmented into words from the dictionary ["leet", "code"].
+
 ### 4. Dynamic Programming with Trie
 - **Time complexity**: O((n * t^2) + m)
+  - n is the length of the string s
+  - m is the number of words in wordDict
+  - t is the maximum length of any word in wordDict
 - **Space complexity**: O(n + (m * t))
-
-Where:
-- n is the length of the string s
-- m is the number of words in wordDict
-- t is the maximum length of any word in wordDict
+  - n is the length of the string s (DP array size)
+  - m is the number of words in wordDict
+  - t is the maximum length of any word in wordDict (Trie structure size)
 
 #### Python
 ```python
