@@ -214,121 +214,154 @@ Take in order: 2 → 1 → 0
 - **Time Complexity**: O(V + E) where V is the number of courses and E is the number of prerequisite relationships
 - **Space Complexity**: O(V + E) for the adjacency list and the recursion stack
 
-#### JavaScript
 ```javascript
 /**
- * @param {number} numCourses
- * @param {number[][]} prerequisites
- * @return {boolean}
+ * Determines if all courses can be finished given their prerequisites.
+ * @param {number} numCourses - The total number of courses
+ * @param {number[][]} prerequisites - Array of [course, prerequisite] pairs
+ * @return {boolean} - Whether all courses can be completed
  */
-var canFinish = function(numCourses, prerequisites) {
-    // Map each course to its prerequisites
-    const preMap = new Map();
+function canFinish(numCourses, prerequisites) {
+    // Create adjacency list for each course
+    const preMap = {};
     for (let i = 0; i < numCourses; i++) {
-        preMap.set(i, []);
+        preMap[i] = [];
     }
     
-    for (const [course, prereq] of prerequisites) {
-        preMap.get(course).push(prereq);
+    // Populate the adjacency list
+    for (const [crs, pre] of prerequisites) {
+        preMap[crs].push(pre);
     }
     
-    // Set to keep track of courses in the current DFS path
-    const visiting = new Set();
-    // Set to keep track of already verified courses
-    const completed = new Set();
+    // visitSet tracks courses in the current DFS path
+    const visitSet = new Set();
     
-    function dfs(course) {
-        if (visiting.has(course)) {
-            // Cycle detected
+    /**
+     * Depth-first search to check if course can be completed
+     * @param {number} crs - The course to check
+     * @return {boolean} - Whether the course can be completed
+     */
+    function dfs(crs) {
+        // If course is in current path, we found a cycle
+        if (visitSet.has(crs)) {
             return false;
         }
         
-        if (completed.has(course)) {
+        // If course has no prerequisites, it can be completed
+        if (preMap[crs].length === 0) {
             return true;
         }
         
-        if (preMap.get(course).length === 0) {
-            completed.add(course);
-            return true;
-        }
+        // Add course to current path
+        visitSet.add(crs);
         
-        visiting.add(course);
-        
-        for (const prereq of preMap.get(course)) {
-            if (!dfs(prereq)) {
+        // Check all prerequisites recursively
+        for (const pre of preMap[crs]) {
+            if (!dfs(pre)) {
                 return false;
             }
         }
         
-        visiting.delete(course);
-        completed.add(course);
-        preMap.set(course, []);
+        // Remove course from current path
+        visitSet.delete(crs);
+        
+        // Mark as "visited" by emptying prerequisites
+        preMap[crs] = [];
         
         return true;
     }
     
-    for (let i = 0; i < numCourses; i++) {
-        if (!dfs(i)) {
+    // Try to complete each course
+    for (let crs = 0; crs < numCourses; crs++) {
+        if (!dfs(crs)) {
             return false;
         }
     }
     
     return true;
-};
+}
 ```
 
-#### Java
+## Java Implementation
+
 ```java
-class Solution {
+import java.util.*;
+
+/**
+ * Solution for the Course Schedule problem
+ */
+public class CourseSchedule {
+    
+    /**
+     * Determines if all courses can be finished given their prerequisites.
+     * @param numCourses The total number of courses
+     * @param prerequisites Array of [course, prerequisite] pairs
+     * @return Whether all courses can be completed
+     */
     public boolean canFinish(int numCourses, int[][] prerequisites) {
-        // Map each course to its prerequisites
-        List<List<Integer>> adj = new ArrayList<>();
+        // Create adjacency list for prerequisites
+        Map<Integer, List<Integer>> preMap = new HashMap<>();
+        
+        // Initialize empty lists for all courses
         for (int i = 0; i < numCourses; i++) {
-            adj.add(new ArrayList<>());
+            preMap.put(i, new ArrayList<>());
         }
         
+        // Fill the adjacency list
         for (int[] prereq : prerequisites) {
-            adj.get(prereq[0]).add(prereq[1]);
+            int course = prereq[0];
+            int prerequisite = prereq[1];
+            preMap.get(course).add(prerequisite);
         }
         
-        // 0 = unvisited, 1 = in current path, 2 = processed
-        int[] visited = new int[numCourses];
+        // Set to track courses in current DFS path
+        Set<Integer> visitSet = new HashSet<>();
         
-        for (int i = 0; i < numCourses; i++) {
-            if (visited[i] == 0) {
-                if (hasCycle(i, adj, visited)) {
-                    return false;
-                }
+        // Try to complete all courses
+        for (int course = 0; course < numCourses; course++) {
+            if (!dfs(course, preMap, visitSet)) {
+                return false;
             }
         }
         
         return true;
     }
     
-    private boolean hasCycle(int course, List<List<Integer>> adj, int[] visited) {
-        // If the course is in the current DFS path, we found a cycle
-        if (visited[course] == 1) {
-            return true;
-        }
-        
-        // If the course has been processed already, we know it's safe
-        if (visited[course] == 2) {
+    /**
+     * Depth-first search to check if course can be completed
+     * @param course The course to check
+     * @param preMap Map of course to prerequisites
+     * @param visitSet Set of courses in current path
+     * @return Whether the course can be completed
+     */
+    private boolean dfs(int course, Map<Integer, List<Integer>> preMap, Set<Integer> visitSet) {
+        // If course is in current path, we found a cycle
+        if (visitSet.contains(course)) {
             return false;
         }
         
-        // Mark the course as being in the current DFS path
-        visited[course] = 1;
+        // If course has no prerequisites, it can be completed
+        if (preMap.get(course).isEmpty()) {
+            return true;
+        }
         
-        // Check all prerequisites
-        for (int prereq : adj.get(course)) {
-            if (hasCycle(prereq, adj, visited)) {
-                return true;
+        // Add course to current path
+        visitSet.add(course);
+        
+        // Check all prerequisites recursively
+        for (int prereq : preMap.get(course)) {
+            if (!dfs(prereq, preMap, visitSet)) {
+                return false;
             }
         }
         
-        // Mark the course as processed (no cycle found)
-        visited[course] = 2;
-        return false;
+        // Remove course from current path
+        visitSet.remove(course);
+        
+        // Mark as "visited" by emptying prerequisites
+        preMap.get(course).clear();
+        
+        return true;
     }
 }
 ```
