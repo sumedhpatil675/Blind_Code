@@ -221,6 +221,172 @@ class Solution:
         return list(res)
 ```
 
+The solution uses two key components:
+1. A **Trie** data structure
+2. **Depth-First Search (DFS)**
+
+## Trie Data Structure
+
+A Trie is a tree-like structure that efficiently stores a collection of strings:
+
+```
+       root
+      /  |  \
+     c   d   g...
+    /     \
+   a       o
+  / \       \
+ t   s       g
+ |
+ s (isWord=True)
+```
+
+In this example, words like "cats" and "dog" are stored in the Trie. Each node has:
+- A collection of child nodes (one for each possible next character)
+- A flag indicating if the path from root to this node forms a complete word
+
+## The Algorithm Step by Step
+
+### Step 1: Build the Trie
+Insert all target words into the Trie structure.
+
+### Step 2: Search the Board Using DFS
+
+Let's visualize with this sample board:
+
+```
+┌───┬───┬───┐
+│ C │ A │ T │
+├───┼───┼───┤
+│ R │ S │ E │
+├───┼───┼───┤
+│ D │ O │ G │
+└───┴───┴───┘
+```
+
+#### DFS Illustration
+
+Starting from cell (0,0) with letter 'C':
+
+```
+┌───┬───┬───┐
+│[C]│ A │ T │
+├───┼───┼───┤
+│ R │ S │ E │
+├───┼───┼───┤
+│ D │ O │ G │
+└───┴───┴───┘
+```
+
+1. We check if 'C' is in the Trie's root children: Yes
+2. We mark (0,0) as visited
+3. We explore adjacent cells
+
+Moving to cell (0,1) with letter 'A':
+
+```
+┌───┬───┬───┐
+│[C]│[A]│ T │
+├───┼───┼───┤
+│ R │ S │ E │
+├───┼───┼───┤
+│ D │ O │ G │
+└───┴───┴───┘
+```
+
+1. We check if 'A' is in the Trie node for 'C': Yes
+2. We mark (0,1) as visited
+3. We explore adjacent cells
+
+Moving to cell (0,2) with letter 'T':
+
+```
+┌───┬───┬───┐
+│[C]│[A]│[T]│
+├───┼───┼───┤
+│ R │ S │ E │
+├───┼───┼───┤
+│ D │ O │ G │
+└───┴───┴───┘
+```
+
+1. We check if 'T' is in the Trie node for 'CA': Yes
+2. We mark (0,2) as visited
+3. We check if 'CAT' is a complete word in our Trie: Yes, add to results
+4. We explore adjacent cells (none valid or unvisited)
+5. We backtrack, unmark (0,2)
+
+```
+┌───┬───┬───┐
+│[C]│[A]│ T │
+├───┼───┼───┤
+│ R │ S │ E │
+├───┼───┼───┤
+│ D │ O │ G │
+└───┴───┴───┘
+```
+
+And continue exploration from other adjacent cells of 'A'...
+
+We repeat this process starting from every cell on the board. For example, starting from (2,0):
+
+```
+┌───┬───┬───┐
+│ C │ A │ T │
+├───┼───┼───┤
+│ R │ S │ E │
+├───┼───┼───┤
+│[D]│ O │ G │
+└───┴───┴───┘
+```
+
+Eventually finding "DOG":
+
+```
+┌───┬───┬───┐
+│ C │ A │ T │
+├───┼───┼───┤
+│ R │ S │ E │
+├───┼───┼───┤
+│[D]│[O]│[G]│
+└───┴───┴───┘
+```
+
+## The Search Process in Detail
+
+For each cell on the board:
+1. Start DFS if the cell's letter is in the Trie's root children
+2. During DFS:
+   - Mark cells as visited to avoid reusing them
+   - Follow the path in the Trie corresponding to the sequence of letters
+   - When a complete word is found, add it to results
+   - Explore all four adjacent directions (up, down, left, right)
+   - Backtrack by unvisiting cells when done exploring a path
+
+## A Trace of Finding "CAT"
+
+1. Start at cell (0,0) = 'C'
+   ```
+   Current Path: "C"
+   Visited: [(0,0)]
+   ```
+
+2. Move to cell (0,1) = 'A'
+   ```
+   Current Path: "CA"
+   Visited: [(0,0), (0,1)]
+   ```
+
+3. Move to cell (0,2) = 'T'
+   ```
+   Current Path: "CAT"
+   Visited: [(0,0), (0,1), (0,2)]
+   Found word: "CAT" ✓
+   ```
+
+4. Backtrack and explore other paths...
+   
+
 #### JavaScript
 ```javascript
 class TrieNode {
