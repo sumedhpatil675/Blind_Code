@@ -391,71 +391,76 @@ For each cell on the board:
 
 ```javascript
 /**
- * @param {character[][]} board
+ * @param {string[][]} grid
  * @param {string[]} words
  * @return {string[]}
  */
-    class TrieNode {
-        constructor() {
-            this.children = {};
-            this.isWord = false;
-        }
-        
-        addWord(word) {
-            let cur = this;
-            for (let c of word) {
-                if (!(c in cur.children)) {
-                    cur.children[c] = new TrieNode();
-                }
-                cur = cur.children[c];
-            }
-            cur.isWord = true;
-        }
+
+class TrieNode {
+  constructor() {
+    this.children = {};
+    this.isWord = false;
+  }
+}
+
+export default function findWordsInGrid(grid, words) {
+  // Create the root of our Trie
+  const root = new TrieNode();
+
+  // Function to add a word to the Trie
+  function addWord(word) {
+    let curr = root;
+    for(let c of word) {
+      if(!(c in curr.children)) {
+        curr.children[c] = new TrieNode();
+      }
+      curr = curr.children[c];
+    }
+    curr.isWord = true;
+  }
+
+  // Building trie with all words
+  for(let w of words) {
+    addWord(w);
+  }
+
+  const ROWS = grid.length;
+  const COLS = grid[0].length;
+  const res = new Set();
+  const visit = new Set();
+  
+  function dfs(r, c, node, word) {
+    if(r < 0 || c < 0 || r === ROWS || c === COLS || 
+       !(grid[r][c] in node.children) || 
+       visit.has(`${r},${c}`)) {
+      return;
+    }
+
+    visit.add(`${r},${c}`);
+    node = node.children[grid[r][c]];
+    word += grid[r][c];
+
+    if(node.isWord) {
+      res.add(word);
     }
     
-    const root = new TrieNode();
-    
-    // Build the Trie with all words
-    for (let w of words) {
-        root.addWord(w);
+    dfs(r+1, c, node, word);
+    dfs(r-1, c, node, word);
+    dfs(r, c+1, node, word);
+    dfs(r, c-1, node, word);
+
+    visit.delete(`${r},${c}`);
+  }
+
+  for(let r = 0; r < ROWS; r++) {
+    for(let c = 0; c < COLS; c++) {
+      dfs(r, c, root, "");
     }
-    
-    const ROWS = board.length;
-    const COLS = board[0].length;
-    const res = new Set();
-    const visit = new Set();
-    
-    function dfs(r, c, node, word) {
-        if (r < 0 || c < 0 || r === ROWS || c === COLS ||
-            !(board[r][c] in node.children) || visit.has(`${r},${c}`)) {
-            return;
-        }
-        
-        visit.add(`${r},${c}`);
-        node = node.children[board[r][c]];
-        word += board[r][c];
-        
-        if (node.isWord) {
-            res.add(word);
-        }
-        
-        dfs(r + 1, c, node, word);
-        dfs(r - 1, c, node, word);
-        dfs(r, c + 1, node, word);
-        dfs(r, c - 1, node, word);
-        
-        visit.delete(`${r},${c}`);
-    }
-    
-    // Start DFS from each cell
-    for (let r = 0; r < ROWS; r++) {
-        for (let c = 0; c < COLS; c++) {
-            dfs(r, c, root, "");
-        }
-    }
-    
-    return Array.from(res);
-```
+  }
+
+  return Array.from(res);
+}
+
 
 #### Java Implementation
 
