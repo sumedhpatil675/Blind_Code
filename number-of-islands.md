@@ -142,148 +142,159 @@ private void dfs(char[][] grid, int r, int c) {
 - **Time complexity**: O(m*n)
 - **Space complexity**: O(min(m,n)) in the worst case
 
-#### Python
+## Python Implementation
 ```python
 from collections import deque
+from typing import List
 
-def numIslands(grid):
+def numIslands(grid: List[List[str]]) -> int:
     if not grid:
         return 0
     
     rows, cols = len(grid), len(grid[0])
-    count = 0
+    visit = set()
+    islands = 0
+    
+    def bfs(r, c):
+        q = deque()
+        visit.add((r, c))
+        q.append((r, c))
+        
+        while q:
+            row, col = q.popleft()
+            directions = [[1, 0], [-1, 0], [0, 1], [0, -1]]
+            
+            for dr, dc in directions:
+                r, c = row + dr, col + dc
+                if (r in range(rows) and 
+                    c in range(cols) and 
+                    grid[r][c] == "1" and 
+                    (r, c) not in visit):
+                    q.append((r, c))
+                    visit.add((r, c))
     
     for r in range(rows):
         for c in range(cols):
-            if grid[r][c] == '1':
-                count += 1
-                grid[r][c] = '0'  # Mark as visited
-                
-                # BFS to find the entire island
-                queue = deque([(r, c)])
-                while queue:
-                    cur_r, cur_c = queue.popleft()
-                    
-                    # Check all 4 directions
-                    directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
-                    for dr, dc in directions:
-                        next_r, next_c = cur_r + dr, cur_c + dc
-                        if (0 <= next_r < rows and 0 <= next_c < cols 
-                            and grid[next_r][next_c] == '1'):
-                            queue.append((next_r, next_c))
-                            grid[next_r][next_c] = '0'  # Mark as visited
+            if grid[r][c] == "1" and (r, c) not in visit:
+                bfs(r, c)
+                islands += 1
     
-    return count
+    return islands
 ```
+# Number of Islands - BFS Explanation
 
-## BFS Algorithm Visualization
-
-### First Island (BFS)
+## Original Grid Example
 ```
-Step 1: Find first '1' at (0,0), add to queue
-  0 1 2 3 4      Queue: [(0,0)]
-0 1 1 0 0 0      Island count = 1
+  0 1 2 3 4
+0 1 1 0 0 0
 1 1 1 0 0 0
 2 0 0 1 0 0
 3 0 0 0 1 1
+```
 
-Step 2: Process (0,0), mark as visited, add neighbors
-  0 1 2 3 4      Queue: [(0,1), (1,0)]
-0 X 1 0 0 0      X = visited
-1 1 1 0 0 0
+## BFS Process Using Visit Set
+
+```
+Step 1: Start BFS from (0,0)
+  0 1 2 3 4         Queue: [(0,0)]
+0 v 1 0 0 0         Visit set: {(0,0)}
+1 1 1 0 0 0         Islands: 1
+2 0 0 1 0 0         v = visited
+3 0 0 0 1 1
+
+Step 2: Process (0,0), add neighbors
+  0 1 2 3 4         Queue: [(0,1), (1,0)]
+0 v v 0 0 0         Visit set: {(0,0), (0,1), (1,0)}
+1 v 1 0 0 0
 2 0 0 1 0 0
 3 0 0 0 1 1
 
-Step 3: Process (0,1), mark as visited, add neighbors
-  0 1 2 3 4      Queue: [(1,0), (1,1)]
-0 X X 0 0 0
-1 1 1 0 0 0
+Step 3: Process (0,1), add neighbor
+  0 1 2 3 4         Queue: [(1,0), (1,1)]
+0 v v 0 0 0         Visit set: {(0,0), (0,1), (1,0), (1,1)}
+1 v v 0 0 0
 2 0 0 1 0 0
 3 0 0 0 1 1
 
-Step 4: Process (1,0), mark as visited, add neighbors
-  0 1 2 3 4      Queue: [(1,1)]
-0 X X 0 0 0
-1 X 1 0 0 0
+Step 4: Process (1,0), no new neighbors
+  0 1 2 3 4         Queue: [(1,1)]
+0 v v 0 0 0         Visit set: {(0,0), (0,1), (1,0), (1,1)}
+1 v v 0 0 0
 2 0 0 1 0 0
 3 0 0 0 1 1
 
-Step 5: Process (1,1), mark as visited
-  0 1 2 3 4      Queue: []
-0 X X 0 0 0
-1 X X 0 0 0
+Step 5: Process (1,1), queue empty
+  0 1 2 3 4         Queue: []
+0 v v 0 0 0         Visit set: {(0,0), (0,1), (1,0), (1,1)}
+1 v v 0 0 0         First island fully explored
 2 0 0 1 0 0
 3 0 0 0 1 1
 ```
 
-### Second Island (BFS)
-```
-Step 6: Find next '1' at (2,2), add to queue
-  0 1 2 3 4      Queue: [(2,2)]
-0 X X 0 0 0      Island count = 2
-1 X X 0 0 0
-2 0 0 1 0 0
-3 0 0 0 1 1
-
-Step 7: Process (2,2), mark as visited
-  0 1 2 3 4      Queue: []
-0 X X 0 0 0
-1 X X 0 0 0
-2 0 0 X 0 0
-3 0 0 0 1 1
-```
-
-### Third Island (BFS)
-```
-Step 8: Find next '1' at (3,3), add to queue
-  0 1 2 3 4      Queue: [(3,3)]
-0 X X 0 0 0      Island count = 3
-1 X X 0 0 0
-2 0 0 X 0 0
-3 0 0 0 1 1
-
-Step 9: Process (3,3), mark as visited, add neighbor
-  0 1 2 3 4      Queue: [(3,4)]
-0 X X 0 0 0
-1 X X 0 0 0
-2 0 0 X 0 0
-3 0 0 0 X 1
-
-Step 10: Process (3,4), mark as visited
-  0 1 2 3 4      Queue: []
-0 X X 0 0 0
-1 X X 0 0 0
-2 0 0 X 0 0
-3 0 0 0 X X
-```
-
-Final count = 3 islands
-
-## BFS Execution Trace Table
+## Detailed BFS Execution Trace
 
 ```
-+-------------------+-------------------+----------------+------------------+
-| Current Position  | Queue Contents    | Islands Found  | Grid State       |
-+-------------------+-------------------+----------------+------------------+
-| Start             | []                | 0              | Original grid    |
-| (0,0) found land  | [(0,0)]           | 1              | Original grid    |
-| Process (0,0)     | [(0,1), (1,0)]    | 1              | (0,0) → X        |
-| Process (0,1)     | [(1,0), (1,1)]    | 1              | (0,1) → X        |
-| Process (1,0)     | [(1,1)]           | 1              | (1,0) → X        |
-| Process (1,1)     | []                | 1              | (1,1) → X        |
-| (2,2) found land  | [(2,2)]           | 2              | No change        |
-| Process (2,2)     | []                | 2              | (2,2) → X        |
-| (3,3) found land  | [(3,3)]           | 3              | No change        |
-| Process (3,3)     | [(3,4)]           | 3              | (3,3) → X        |
-| Process (3,4)     | []                | 3              | (3,4) → X        |
-| Completed         | []                | 3              | All islands      |
-|                   |                   |                | marked as visited|
-+-------------------+-------------------+----------------+------------------+
++-------+----------------+--------------------+------------------+----------------+
+| Step  | Current Cell   | Queue After        | Visit Set After  | Islands Count  |
++-------+----------------+--------------------+------------------+----------------+
+| Start | -              | []                 | {}               | 0              |
+| 1     | Find (0,0)='1' | [(0,0)]           | {(0,0)}          | 1              |
+| 2     | (0,0)          | [(0,1), (1,0)]    | {(0,0),(0,1),    | 1              |
+|       |                |                    |  (1,0)}          |                |
+| 3     | (0,1)          | [(1,0), (1,1)]    | {(0,0),(0,1),    | 1              |
+|       |                |                    |  (1,0),(1,1)}    |                |
+| 4     | (1,0)          | [(1,1)]           | {(0,0),(0,1),    | 1              |
+|       |                |                    |  (1,0),(1,1)}    |                |
+| 5     | (1,1)          | []                | {(0,0),(0,1),    | 1              |
+|       |                |                    |  (1,0),(1,1)}    |                |
+| 6     | Find (2,2)='1' | [(2,2)]           | {(0,0),...,(2,2)}| 2              |
+| 7     | (2,2)          | []                | {(0,0),...,(2,2)}| 2              |
+| 8     | Find (3,3)='1' | [(3,3)]           | {(0,0),...,(3,3)}| 3              |
+| 9     | (3,3)          | [(3,4)]           | {(0,0),...,(3,3),| 3              |
+|       |                |                    |  (3,4)}          |                |
+| 10    | (3,4)          | []                | {(0,0),...,(3,4)}| 3              |
+| Final | -              | []                | 10 cells visited | 3              |
++-------+----------------+--------------------+------------------+----------------+
 ```
 
+## Key Algorithm Steps in ASCII
 
-#### JavaScript
+```
+Main Loop:
+┌─────────────────────────────────┐
+│ For each cell (r,c) in grid:    │
+│  └─► If cell is land AND        │
+│      not visited:               │
+│       │                         │
+│       └─► Start BFS from (r,c)  │
+│           +1 island count       │
+└─────────────────────────────────┘
+
+BFS Function:
+┌─────────────────────────────────┐
+│ Add starting cell to visit set  │
+│ Add starting cell to queue      │
+│                                 │
+│ While queue not empty:          │
+│  └─► Get cell from queue        │
+│      │                          │
+│      └─► For each direction:    │
+│           Check if neighbor is: │
+│           1. Within bounds      │
+│           2. Land cell ('1')    │
+│           3. Not visited        │
+│           │                     │
+│           └─► Add to queue      │
+│               Add to visit set  │
+└─────────────────────────────────┘
+```
+
+## JavaScript Implementation
 ```javascript
+/**
+ * @param {character[][]} grid
+ * @return {number}
+ */
 function numIslands(grid) {
     if (!grid || grid.length === 0) {
         return 0;
@@ -291,85 +302,114 @@ function numIslands(grid) {
     
     const rows = grid.length;
     const cols = grid[0].length;
-    let count = 0;
+    const visit = new Set();
+    let islands = 0;
+    
+    function bfs(r, c) {
+        const q = [];
+        const visitKey = `${r},${c}`;
+        visit.add(visitKey);
+        q.push([r, c]);
+        
+        while (q.length > 0) {
+            const [row, col] = q.shift();
+            const directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+            
+            for (const [dr, dc] of directions) {
+                const newR = row + dr;
+                const newC = col + dc;
+                const newKey = `${newR},${newC}`;
+                
+                if (
+                    newR >= 0 && newR < rows &&
+                    newC >= 0 && newC < cols &&
+                    grid[newR][newC] === "1" &&
+                    !visit.has(newKey)
+                ) {
+                    q.push([newR, newC]);
+                    visit.add(newKey);
+                }
+            }
+        }
+    }
     
     for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
-            if (grid[r][c] === '1') {
-                count++;
-                grid[r][c] = '0';  // Mark as visited
-                
-                // BFS to find the entire island
-                const queue = [[r, c]];
-                while (queue.length > 0) {
-                    const [cur_r, cur_c] = queue.shift();
-                    
-                    // Check all 4 directions
-                    const directions = [[0, 1], [1, 0], [0, -1], [-1, 0]];
-                    for (const [dr, dc] of directions) {
-                        const next_r = cur_r + dr;
-                        const next_c = cur_c + dc;
-                        if (next_r >= 0 && next_r < rows && next_c >= 0 && next_c < cols 
-                            && grid[next_r][next_c] === '1') {
-                            queue.push([next_r, next_c]);
-                            grid[next_r][next_c] = '0';  // Mark as visited
-                        }
-                    }
-                }
+            const key = `${r},${c}`;
+            if (grid[r][c] === "1" && !visit.has(key)) {
+                bfs(r, c);
+                islands++;
             }
         }
     }
     
-    return count;
+    return islands;
 }
 ```
 
-#### Java
+## Java Implementation
 ```java
-public int numIslands(char[][] grid) {
-    if (grid == null || grid.length == 0) {
-        return 0;
+import java.util.*;
+
+class Solution {
+    public int numIslands(char[][] grid) {
+        if (grid == null || grid.length == 0) {
+            return 0;
+        }
+        
+        int rows = grid.length;
+        int cols = grid[0].length;
+        Set<String> visit = new HashSet<>();
+        int islands = 0;
+        
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                String key = r + "," + c;
+                if (grid[r][c] == '1' && !visit.contains(key)) {
+                    bfs(grid, r, c, visit);
+                    islands++;
+                }
+            }
+        }
+        
+        return islands;
     }
     
-    int rows = grid.length;
-    int cols = grid[0].length;
-    int count = 0;
-    
-    for (int r = 0; r < rows; r++) {
-        for (int c = 0; c < cols; c++) {
-            if (grid[r][c] == '1') {
-                count++;
-                grid[r][c] = '0';  // Mark as visited
+    private void bfs(char[][] grid, int r, int c, Set<String> visit) {
+        int rows = grid.length;
+        int cols = grid[0].length;
+        Queue<int[]> q = new LinkedList<>();
+        
+        visit.add(r + "," + c);
+        q.offer(new int[]{r, c});
+        
+        while (!q.isEmpty()) {
+            int[] pos = q.poll();
+            int row = pos[0];
+            int col = pos[1];
+            
+            int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+            
+            for (int[] dir : directions) {
+                int newR = row + dir[0];
+                int newC = col + dir[1];
+                String newKey = newR + "," + newC;
                 
-                // BFS to find the entire island
-                Queue<int[]> queue = new LinkedList<>();
-                queue.add(new int[]{r, c});
-                
-                while (!queue.isEmpty()) {
-                    int[] current = queue.poll();
-                    int cur_r = current[0];
-                    int cur_c = current[1];
-                    
-                    // Check all 4 directions
-                    int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
-                    for (int[] dir : directions) {
-                        int next_r = cur_r + dir[0];
-                        int next_c = cur_c + dir[1];
-                        
-                        if (next_r >= 0 && next_r < rows && next_c >= 0 && next_c < cols 
-                            && grid[next_r][next_c] == '1') {
-                            queue.add(new int[]{next_r, next_c});
-                            grid[next_r][next_c] = '0';  // Mark as visited
-                        }
-                    }
+                if (
+                    newR >= 0 && newR < rows &&
+                    newC >= 0 && newC < cols &&
+                    grid[newR][newC] == '1' &&
+                    !visit.contains(newKey)
+                ) {
+                    q.offer(new int[]{newR, newC});
+                    visit.add(newKey);
                 }
             }
         }
     }
-    
-    return count;
 }
 ```
+
 
 ### 3. Union-Find (Disjoint Set Union)
 - **Time complexity**: O(m*n)
