@@ -44,6 +44,112 @@ class Solution:
         return dfs(0, -1) and len(visit) == n
 ```
 
+## ASCII Diagram Explanation
+
+This algorithm determines if a given undirected graph is a valid tree. For a graph to be a valid tree:
+1. It must be fully connected (all nodes reachable)
+2. It must have no cycles
+
+```
+Valid Tree:               Not a Tree (Has Cycle):      Not a Tree (Disconnected):
+
+    0                          0                             0        3
+   / \                        / \                           / \       |
+  1   2                      1---2                         1   2      4
+ /                           |
+3                            3
+```
+
+## Tracking Table Example
+
+For the valid tree example above:
+
+```
++--------+---------------+----------------------+---------------+
+| Step   | Current Node  | Previous Node        | Visited Set   |
++--------+---------------+----------------------+---------------+
+| Start  | 0             | -1                   | {}            |
+| 1      | 0             | -1                   | {0}           |
+| 2      | 1             | 0                    | {0,1}         |
+| 3      | 3             | 1                    | {0,1,3}       |
+| 4      | 2             | 0                    | {0,1,3,2}     |
+| Final  | Check: n=4 == len(visit)=4           | True          |
++--------+---------------+----------------------+---------------+
+```
+
+For the cycle example:
+
+```
++--------+---------------+----------------------+---------------+
+| Step   | Current Node  | Previous Node        | Visited Set   |
++--------+---------------+----------------------+---------------+
+| Start  | 0             | -1                   | {}            |
+| 1      | 0             | -1                   | {0}           |
+| 2      | 1             | 0                    | {0,1}         |
+| 3      | 2             | 1                    | {0,1,2}       |
+| 4      | 0             | 2                    | {0,1,2}       |
+| 5      | Already visited 0 → Cycle detected!  | Return False  |
++--------+---------------+----------------------+---------------+
+```
+
+## Example Execution Trace
+
+Let's trace the algorithm on a simple 4-node tree:
+```
+    0
+   / \
+  1   2
+ /
+3
+```
+
+With edges list: [[0,1], [0,2], [1,3]]
+
+```
+1. Initialize:
+   - n = 4
+   - adj = {0:[], 1:[], 2:[], 3:[]}
+
+2. Build adjacency list:
+   - adj = {0:[1,2], 1:[0,3], 2:[0], 3:[1]}
+   - visit = {}
+
+3. Start DFS from node 0:
+   - dfs(0, -1)
+     - Mark 0 as visited: visit = {0}
+     - For neighbor 1:
+       - dfs(1, 0)
+         - Mark 1 as visited: visit = {0,1}
+         - For neighbor 0:
+           - 0 == prev, so skip
+         - For neighbor 3:
+           - dfs(3, 1)
+             - Mark 3 as visited: visit = {0,1,3}
+             - For neighbor 1:
+               - 1 == prev, so skip
+             - Return True
+         - Return True
+     - For neighbor 2:
+       - dfs(2, 0)
+         - Mark 2 as visited: visit = {0,1,3,2}
+         - For neighbor 0:
+           - 0 == prev, so skip
+         - Return True
+     - Return True
+
+4. Final check:
+   - dfs(0, -1) returned True
+   - n = 4 and len(visit) = 4, so 4 == 4 is True
+   - Return True (valid tree confirmed)
+```
+
+## Key Insights
+
+This algorithm leverages two critical properties of trees:
+1. **No cycles**: The DFS checks for cycles by keeping track of visited nodes and ensuring no previously visited node (except the direct parent) is encountered again.
+2. **Fully connected**: After the DFS, all nodes must be visited (n == len(visit)) to confirm there are no disconnected components.
+   
+
 #### JavaScript
 ```javascript
 /**
