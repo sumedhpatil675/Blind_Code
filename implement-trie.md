@@ -184,6 +184,7 @@ This implementation is memory-efficient for lowercase English alphabet but could
 
 
 #### JavaScript
+
 ```javascript
 class TrieNode {
     constructor() {
