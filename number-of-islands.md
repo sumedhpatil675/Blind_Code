@@ -1,8 +1,17 @@
 # Number of Islands
 
-Given an m x n 2D binary grid grid which represents a map of '1's (land) and '0's (water), return the number of islands.
+## Problem Description
+Given an m x n 2D binary grid where '1' represents land and '0' represents water, count the number of islands using Breadth-First Search.
 
-An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
+## Example Grid
+```
+  0 1 2 3 4
+0 1 1 0 0 0
+1 1 1 0 0 0
+2 0 0 1 0 0
+3 0 0 0 1 1
+```
+In this grid, there are 3 islands.
 
 ## Approaches
 
@@ -166,6 +175,112 @@ def numIslands(grid):
     
     return count
 ```
+
+## BFS Algorithm Visualization
+
+### First Island (BFS)
+```
+Step 1: Find first '1' at (0,0), add to queue
+  0 1 2 3 4      Queue: [(0,0)]
+0 1 1 0 0 0      Island count = 1
+1 1 1 0 0 0
+2 0 0 1 0 0
+3 0 0 0 1 1
+
+Step 2: Process (0,0), mark as visited, add neighbors
+  0 1 2 3 4      Queue: [(0,1), (1,0)]
+0 X 1 0 0 0      X = visited
+1 1 1 0 0 0
+2 0 0 1 0 0
+3 0 0 0 1 1
+
+Step 3: Process (0,1), mark as visited, add neighbors
+  0 1 2 3 4      Queue: [(1,0), (1,1)]
+0 X X 0 0 0
+1 1 1 0 0 0
+2 0 0 1 0 0
+3 0 0 0 1 1
+
+Step 4: Process (1,0), mark as visited, add neighbors
+  0 1 2 3 4      Queue: [(1,1)]
+0 X X 0 0 0
+1 X 1 0 0 0
+2 0 0 1 0 0
+3 0 0 0 1 1
+
+Step 5: Process (1,1), mark as visited
+  0 1 2 3 4      Queue: []
+0 X X 0 0 0
+1 X X 0 0 0
+2 0 0 1 0 0
+3 0 0 0 1 1
+```
+
+### Second Island (BFS)
+```
+Step 6: Find next '1' at (2,2), add to queue
+  0 1 2 3 4      Queue: [(2,2)]
+0 X X 0 0 0      Island count = 2
+1 X X 0 0 0
+2 0 0 1 0 0
+3 0 0 0 1 1
+
+Step 7: Process (2,2), mark as visited
+  0 1 2 3 4      Queue: []
+0 X X 0 0 0
+1 X X 0 0 0
+2 0 0 X 0 0
+3 0 0 0 1 1
+```
+
+### Third Island (BFS)
+```
+Step 8: Find next '1' at (3,3), add to queue
+  0 1 2 3 4      Queue: [(3,3)]
+0 X X 0 0 0      Island count = 3
+1 X X 0 0 0
+2 0 0 X 0 0
+3 0 0 0 1 1
+
+Step 9: Process (3,3), mark as visited, add neighbor
+  0 1 2 3 4      Queue: [(3,4)]
+0 X X 0 0 0
+1 X X 0 0 0
+2 0 0 X 0 0
+3 0 0 0 X 1
+
+Step 10: Process (3,4), mark as visited
+  0 1 2 3 4      Queue: []
+0 X X 0 0 0
+1 X X 0 0 0
+2 0 0 X 0 0
+3 0 0 0 X X
+```
+
+Final count = 3 islands
+
+## BFS Execution Trace Table
+
+```
++-------------------+-------------------+----------------+------------------+
+| Current Position  | Queue Contents    | Islands Found  | Grid State       |
++-------------------+-------------------+----------------+------------------+
+| Start             | []                | 0              | Original grid    |
+| (0,0) found land  | [(0,0)]           | 1              | Original grid    |
+| Process (0,0)     | [(0,1), (1,0)]    | 1              | (0,0) → X        |
+| Process (0,1)     | [(1,0), (1,1)]    | 1              | (0,1) → X        |
+| Process (1,0)     | [(1,1)]           | 1              | (1,0) → X        |
+| Process (1,1)     | []                | 1              | (1,1) → X        |
+| (2,2) found land  | [(2,2)]           | 2              | No change        |
+| Process (2,2)     | []                | 2              | (2,2) → X        |
+| (3,3) found land  | [(3,3)]           | 3              | No change        |
+| Process (3,3)     | [(3,4)]           | 3              | (3,3) → X        |
+| Process (3,4)     | []                | 3              | (3,4) → X        |
+| Completed         | []                | 3              | All islands      |
+|                   |                   |                | marked as visited|
++-------------------+-------------------+----------------+------------------+
+```
+
 
 #### JavaScript
 ```javascript
