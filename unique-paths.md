@@ -137,52 +137,72 @@ private int dfs(int i, int j, int m, int n, int[][] memo) {
 - **Time complexity**: O(m*n)
 - **Space complexity**: O(m*n)
 
-#### Python
+#### Python Implementation
+
 ```python
-def uniquePaths(m, n):
-    dp = [[0] * (n + 1) for _ in range(m + 1)]
-    dp[m - 1][n - 1] = 1
+def uniquePaths(m: int, n: int) -> int:
+    # Create a 2D DP array with dimensions m x n filled with 1s
+    dp = [[1] * n for _ in range(m)]
     
-    for i in range(m - 1, -1, -1):
-        for j in range(n - 1, -1, -1):
-            dp[i][j] += dp[i + 1][j] + dp[i][j + 1]
+    # Fill the DP array: each cell contains the sum of the cell above and to the left
+    for i in range(1, m):  # row
+        for j in range(1, n):  # column
+            dp[i][j] = dp[i][j-1] + dp[i-1][j]  # left + top
     
-    return dp[0][0]
+    # Return the bottom-right cell which contains the answer
+    return dp[m-1][n-1]
 ```
 
-#### JavaScript
+#### JavaScript Implementation
+
 ```javascript
+/**
+ * @param {number} m - Number of rows
+ * @param {number} n - Number of columns
+ * @return {number} - Number of unique paths
+ */
 function uniquePaths(m, n) {
-    const dp = Array(m + 1).fill().map(() => Array(n + 1).fill(0));
-    dp[m - 1][n - 1] = 1;
+    // Create a 2D DP array with dimensions m x n filled with 1s
+    const dp = Array(m).fill().map(() => Array(n).fill(1));
     
-    for (let i = m - 1; i >= 0; i--) {
-        for (let j = n - 1; j >= 0; j--) {
-            if (i < m - 1 || j < n - 1) { // Skip the destination cell
-                dp[i][j] = dp[i + 1][j] + dp[i][j + 1];
-            }
+    // Fill the DP array: each cell contains the sum of the cell above and to the left
+    for (let i = 1; i < m; i++) {  // row
+        for (let j = 1; j < n; j++) {  // column
+            dp[i][j] = dp[i][j-1] + dp[i-1][j];  // left + top
         }
     }
     
-    return dp[0][0];
+    // Return the bottom-right cell which contains the answer
+    return dp[m-1][n-1];
 }
 ```
 
-#### Java
+#### Java Implementation
+
 ```java
-public int uniquePaths(int m, int n) {
-    int[][] dp = new int[m + 1][n + 1];
-    dp[m - 1][n - 1] = 1;
-    
-    for (int i = m - 1; i >= 0; i--) {
-        for (int j = n - 1; j >= 0; j--) {
-            if (i < m - 1 || j < n - 1) { // Skip the destination cell
-                dp[i][j] += dp[i + 1][j] + dp[i][j + 1];
+public class Solution {
+    public int uniquePaths(int m, int n) {
+        // Create a 2D DP array with dimensions m x n filled with 1s
+        int[][] dp = new int[m][n];
+        
+        // Initialize first row and first column with 1s
+        for (int i = 0; i < m; i++) {
+            dp[i][0] = 1;
+        }
+        for (int j = 0; j < n; j++) {
+            dp[0][j] = 1;
+        }
+        
+        // Fill the DP array: each cell contains the sum of the cell above and to the left
+        for (int i = 1; i < m; i++) {  // row
+            for (int j = 1; j < n; j++) {  // column
+                dp[i][j] = dp[i][j-1] + dp[i-1][j];  // left + top
             }
         }
+        
+        // Return the bottom-right cell which contains the answer
+        return dp[m-1][n-1];
     }
-    
-    return dp[0][0];
 }
 ```
 
