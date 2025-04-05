@@ -387,138 +387,144 @@ For each cell on the board:
 4. Backtrack and explore other paths...
    
 
-#### JavaScript
+#### JavaScript Implementation
+
 ```javascript
-class TrieNode {
-    constructor() {
-        this.children = {};
-        this.isWord = false;
-    }
-}
-
-function buildTrie(words) {
-    const root = new TrieNode();
-    
-    for (const word of words) {
-        let node = root;
-        for (const char of word) {
-            if (!(char in node.children)) {
-                node.children[char] = new TrieNode();
-            }
-            node = node.children[char];
-        }
-        node.isWord = true;
-    }
-    
-    return root;
-}
-
 /**
  * @param {character[][]} board
  * @param {string[]} words
  * @return {string[]}
  */
-var findWords = function(board, words) {
+    class TrieNode {
+        constructor() {
+            this.children = {};
+            this.isWord = false;
+        }
+        
+        addWord(word) {
+            let cur = this;
+            for (let c of word) {
+                if (!(c in cur.children)) {
+                    cur.children[c] = new TrieNode();
+                }
+                cur = cur.children[c];
+            }
+            cur.isWord = true;
+        }
+    }
+    
+    const root = new TrieNode();
+    
+    // Build the Trie with all words
+    for (let w of words) {
+        root.addWord(w);
+    }
+    
     const ROWS = board.length;
     const COLS = board[0].length;
-    const result = new Set();
-    const root = buildTrie(words);
+    const res = new Set();
+    const visit = new Set();
     
-    function dfs(r, c, node, word, visited) {
-        if (
-            r < 0 || c < 0 || 
-            r >= ROWS || c >= COLS || 
-            visited.has(`${r},${c}`) || 
-            !(board[r][c] in node.children)
-        ) {
+    function dfs(r, c, node, word) {
+        if (r < 0 || c < 0 || r === ROWS || c === COLS ||
+            !(board[r][c] in node.children) || visit.has(`${r},${c}`)) {
             return;
         }
         
-        visited.add(`${r},${c}`);
+        visit.add(`${r},${c}`);
         node = node.children[board[r][c]];
         word += board[r][c];
         
         if (node.isWord) {
-            result.add(word);
+            res.add(word);
         }
         
-        dfs(r + 1, c, node, word, visited);
-        dfs(r - 1, c, node, word, visited);
-        dfs(r, c + 1, node, word, visited);
-        dfs(r, c - 1, node, word, visited);
+        dfs(r + 1, c, node, word);
+        dfs(r - 1, c, node, word);
+        dfs(r, c + 1, node, word);
+        dfs(r, c - 1, node, word);
         
-        visited.delete(`${r},${c}`);
+        visit.delete(`${r},${c}`);
     }
     
+    // Start DFS from each cell
     for (let r = 0; r < ROWS; r++) {
         for (let c = 0; c < COLS; c++) {
-            dfs(r, c, root, "", new Set());
+            dfs(r, c, root, "");
         }
     }
     
-    return Array.from(result);
-};
+    return Array.from(res);
 ```
 
-#### Java
-```java
-class TrieNode {
-    Map<Character, TrieNode> children = new HashMap<>();
-    boolean isWord = false;
-}
+#### Java Implementation
 
-class Solution {
-    public List<String> findWords(char[][] board, String[] words) {
-        // Build Trie
-        TrieNode root = new TrieNode();
-        for (String word : words) {
-            TrieNode node = root;
+```java
+    class TrieNode {
+        Map<Character, TrieNode> children = new HashMap<>();
+        boolean isWord = false;
+        
+        public void addWord(String word) {
+            TrieNode cur = this;
             for (char c : word.toCharArray()) {
-                node.children.putIfAbsent(c, new TrieNode());
-                node = node.children.get(c);
+                if (!cur.children.containsKey(c)) {
+                    cur.children.put(c, new TrieNode());
+                }
+                cur = cur.children.get(c);
             }
-            node.isWord = true;
+            cur.isWord = true;
+        }
+    }
+    
+    public List<String> findWords(char[][] board, String[] words) {
+        TrieNode root = new TrieNode();
+        
+        // Build the Trie with all words
+        for (String w : words) {
+            root.addWord(w);
         }
         
-        Set<String> result = new HashSet<>();
         int ROWS = board.length;
         int COLS = board[0].length;
+        Set<String> res = new HashSet<>();
+        Set<Pair<Integer, Integer>> visit = new HashSet<>();
         
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
-                dfs(board, r, c, root, "", result, new HashSet<>());
+                dfs(r, c, root, "", board, res, visit, ROWS, COLS);
             }
         }
         
-        return new ArrayList<>(result);
+        return new ArrayList<>(res);
     }
     
-    private void dfs(char[][] board, int r, int c, TrieNode node, String word, 
-                    Set<String> result, Set<String> visited) {
-        if (r < 0 || c < 0 || 
-            r >= board.length || c >= board[0].length ||
-            visited.contains(r + "," + c) || 
-            !node.children.containsKey(board[r][c])) {
+    private void dfs(int r, int c, TrieNode node, String word, char[][] board, 
+                    Set<String> res, Set<Pair<Integer, Integer>> visit, 
+                    int ROWS, int COLS) {
+        
+        if (r < 0 || c < 0 || r == ROWS || c == COLS || 
+            !node.children.containsKey(board[r][c]) || 
+            visit.contains(new Pair<>(r, c))) {
             return;
         }
         
-        visited.add(r + "," + c);
+        visit.add(new Pair<>(r, c));
         node = node.children.get(board[r][c]);
         word += board[r][c];
         
         if (node.isWord) {
-            result.add(word);
+            res.add(word);
         }
         
-        dfs(board, r + 1, c, node, word, result, visited);
-        dfs(board, r - 1, c, node, word, result, visited);
-        dfs(board, r, c + 1, node, word, result, visited);
-        dfs(board, r, c - 1, node, word, result, visited);
+        dfs(r + 1, c, node, word, board, res, visit, ROWS, COLS);
+        dfs(r - 1, c, node, word, board, res, visit, ROWS, COLS);
+        dfs(r, c + 1, node, word, board, res, visit, ROWS, COLS);
+        dfs(r, c - 1, node, word, board, res, visit, ROWS, COLS);
         
-        visited.remove(r + "," + c);
+        visit.remove(new Pair<>(r, c));
     }
-}
 ```
+
 
 ### 3. Backtracking (Trie) - More Optimized
 
