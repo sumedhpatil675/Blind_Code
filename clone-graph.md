@@ -41,6 +41,68 @@ class Solution:
         return dfs(node) if node else None
 ```
 
+## ASCII Diagram Explanation
+
+The function `cloneGraph` creates a deep copy of a graph while preserving its structure.
+
+```
+Original Graph:          Cloning Process:                   New Graph:
+                         
+    1 --- 2              1. Visit node 1                        1' --- 2'
+    |     |              2. Create copy 1'                      |      |
+    |     |              3. Visit neighbors                     |      |
+    4 --- 3              4. Recursively clone                   4' --- 3'
+```
+
+## Tracking Table
+
+Here's the key tracking table during execution:
+
+```
++--------+---------------+------------------------+
+| Step   | oldToNew Map  | Current Action         |
++--------+---------------+------------------------+
+| Start  | {}            | Call dfs(node 1)       |
+| 1      | {1: 1'}       | Create copy of node 1  |
+| 2      | {1: 1'}       | Process neighbors of 1 |
+| 3      | {1: 1', 2: 2'}| Clone neighbor 2       |
+| 4      | {..., 3: 3'}  | Clone neighbor 3       |
+| 5      | {..., 4: 4'}  | Clone neighbor 4       |
+| Final  | {1:1',2:2',   | Return new copy 1'     |
+|        |  3:3',4:4'}   |                        |
++--------+---------------+------------------------+
+```
+
+## Example Execution
+
+```
+Example execution for graph with nodes 1-2-3:
+
+1. dfs(1)
+   - Create copy 1'
+   - oldToNew = {1: 1'}
+   - For neighbor 2:
+     
+2.   dfs(2)
+     - Create copy 2'
+     - oldToNew = {1: 1', 2: 2'}
+     - For neighbor 1:
+       - Already in map, return 1'
+     - For neighbor 3:
+       
+3.     dfs(3)
+       - Create copy 3'
+       - oldToNew = {1: 1', 2: 2', 3: 3'}
+       - For neighbor 2:
+         - Already in map, return 2'
+       - Return 3'
+       
+     - Return 2'
+     
+   - Return 1'
+```
+
+
 #### JavaScript
 ```javascript
 /**
