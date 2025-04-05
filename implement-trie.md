@@ -160,6 +160,8 @@ Root
                                          │
                                          # (endOfWord = True)
 
+```
+
 ### Search Example: Looking for "app"
 
 1. Start at Root, follow child[0] ('a') → Node 1
