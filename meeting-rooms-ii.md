@@ -236,6 +236,144 @@ def minMeetingRooms(intervals):
     return max_rooms
 ```
 
+
+## Algorithm Overview
+
+1. Extract and sort all meeting start times
+2. Extract and sort all meeting end times
+3. Use two pointers to iterate through these sorted arrays
+4. When we encounter a start time, we need a new meeting room (count++)
+5. When we encounter an end time, we free up a meeting room (count--)
+6. Track the maximum count encountered, which represents the minimum rooms needed
+
+## Visual Explanation with ASCII Diagrams
+
+Let's work through an example:
+```
+intervals = [(1,4), (2,5), (7,9)]
+```
+
+### Step 1: Sort start and end times separately
+```
+start = [1, 2, 7]
+end = [4, 5, 9]
+```
+
+### Step 2: Initialize variables
+```
+res = 0   (maximum rooms needed)
+count = 0 (current rooms in use)
+s = 0     (pointer for start array)
+e = 0     (pointer for end array)
+```
+
+### Step 3: Iterate through the arrays with two pointers
+
+#### Iteration 1:
+Compare start[0] = 1 with end[0] = 4
+Since 1 < 4, a new meeting starts before any ends:
+- Increment s (s = 1)
+- Increment count (count = 1)
+- Update res = max(res, count) = 1
+
+```
+Count: 1
+Max: 1
+```
+
+#### Iteration 2:
+Compare start[1] = 2 with end[0] = 4
+Since 2 < 4, another meeting starts before any ends:
+- Increment s (s = 2)
+- Increment count (count = 2)
+- Update res = max(res, count) = 2
+
+```
+Count: 2
+Max: 2
+```
+
+#### Iteration 3:
+Compare start[2] = 7 with end[0] = 4
+Since 7 > 4, a meeting ends before the next one starts:
+- Increment e (e = 1)
+- Decrement count (count = 1)
+- res remains 2
+
+```
+Count: 1
+Max: 2
+```
+
+#### Iteration 4:
+Compare start[2] = 7 with end[1] = 5
+Since 7 > 5, another meeting ends before the next one starts:
+- Increment e (e = 2)
+- Decrement count (count = 0)
+- res remains 2
+
+```
+
+Count: 0
+Max: 2
+```
+
+#### Iteration 5:
+Compare start[2] = 7 with end[2] = 9
+Since 7 < 9, a new meeting starts:
+- Increment s (s = 3)
+- Increment count (count = 1)
+- res remains 2
+
+
+Since s = 3 = len(intervals), we exit the loop.
+
+### Final result:
+```
+res = 2
+```
+
+## Another Example with More Overlap
+
+Let's try a more complex example:
+```
+intervals = [(1,10), (2,7), (3,19), (8,12), (10,20), (11,30)]
+```
+
+Sorting the start and end times:
+```
+start = [1, 2, 3, 8, 10, 11]
+end = [7, 10, 12, 19, 20, 30]
+```
+
+Stepping through:
+1. start[0]=1 < end[0]=7: count=1, max=1
+2. start[1]=2 < end[0]=7: count=2, max=2
+3. start[2]=3 < end[0]=7: count=3, max=3
+4. start[3]=8 > end[0]=7: count=2, max=3
+5. start[3]=8 < end[1]=10: count=3, max=3
+6. start[4]=10 = end[1]=10: In this algorithm, we prioritize start times, so count=4, max=4
+7. start[5]=11 > end[1]=10: count=3, max=4
+8. start[5]=11 < end[2]=12: count=4, max=4
+9. (s=6) exceeds array length, algorithm terminates
+
+Result: We need 4 meeting rooms to accommodate all meetings.
+
+## Key Insights
+
+1. The two-pointer approach elegantly tracks room usage over time
+
+2. By separating and sorting start/end times, we create a timeline of events
+
+3. When a meeting starts, we need one more room; when it ends, we free one room
+
+4. The maximum number of simultaneous meetings represents the minimum rooms needed
+
+5. This algorithm has O(n log n) time complexity due to the sorting operations
+
+6. In case of ties (same start and end time), this implementation prioritizes start times, which is necessary for correct results
+   
+
 #### JavaScript
 ```javascript
 function minMeetingRooms(intervals) {
