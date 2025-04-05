@@ -61,6 +61,128 @@ class Trie:
         return True
 ```
 
+# Trie Data Structure Explanation
+
+The code implements a Trie (prefix tree) data structure that efficiently stores and retrieves strings. Let's break down how this works with ASCII diagrams.
+
+## Trie Components
+
+1. **TrieNode**: Each node contains:
+   - An array of 26 child pointers (one for each lowercase letter)
+   - A boolean flag indicating if the node represents the end of a word
+
+2. **Trie**: The main class that manages operations on the structure:
+   - `insert(word)`: Adds a new word to the trie
+   - `search(word)`: Checks if a complete word exists
+   - `startsWith(prefix)`: Checks if any word with the given prefix exists
+
+## ASCII Diagram Illustrations
+
+### Example: Building a Trie with words "app", "apple", and "api"
+
+Let's visualize the insertion process step by step:
+
+#### Initially (empty trie):
+```
+Root
+│
+└── [a-z] (all None)
+```
+
+#### After inserting "app":
+
+```
+Root
+│
+└── a ────────────────┐
+    [b-z] (all None)  │
+                       │
+                       p ────────────────┐
+                       [a-o,q-z] (None)  │
+                                         │
+                                         p ────────────────┐
+                                         [a-z] (all None)  │
+                                                           │
+                                                           # (endOfWord = True)
+```
+
+#### After inserting "apple":
+
+```
+Root
+│
+└── a ────────────────┐
+    [b-z] (all None)  │
+                       │
+                       p ────────────────┐
+                       [a-o,q-z] (None)  │
+                                         │
+                                         p ────────────────┐
+                                         [a-z] (all None)  │
+                                         │                 │
+                                         │                 # (endOfWord = True)
+                                         │
+                                         l ────────────────┐
+                                         [a-d,f-z] (None)  │
+                                                           │
+                                                           e ────────────────┐
+                                                           [a-z] (all None)  │
+                                                                             │
+                                                                             # (endOfWord = True)
+```
+
+#### After inserting "api":
+
+```
+Root
+│
+└── a ────────────────┐
+    [b-z] (all None)  │
+                       │
+                       p ────────────────┐
+                       [a-o,q-z] (None)  │
+                       │                 │
+                       │                 p ────────────────┐
+                       │                 [a-z] (all None)  │
+                       │                 │                 │
+                       │                 │                 # (endOfWord = True)
+                       │                 │
+                       │                 l ────────────────┐
+                       │                 [a-d,f-z] (None)  │
+                       │                                   │
+                       │                                   e ────────────────┐
+                       │                                   [a-z] (all None)  │
+                       │                                                     │
+                       │                                                     # (endOfWord = True)
+                       │
+                       i ────────────────┐
+                       [a-z] (all None)  │
+                                         │
+                                         # (endOfWord = True)
+
+### Search Example: Looking for "app"
+
+1. Start at Root, follow child[0] ('a') → Node 1
+2. At Node 1, follow child[15] ('p') → Node 2
+3. At Node 2, follow child[15] ('p') → Node 3
+4. At Node 3, check endOfWord == True? Yes, return True
+
+### StartsWith Example: Checking for prefix "ap"
+
+1. Start at Root, follow child[0] ('a') → Node 1
+2. At Node 1, follow child[15] ('p') → Node 2
+3. Node 2 exists, so return True (doesn't matter if it's an end of word)
+
+## Implementation Details
+
+- The code uses an array of size 26 for each node, assuming only lowercase English letters.
+- Character mapping: `index = ord(c) - ord('a')` converts 'a'→0, 'b'→1, etc.
+- Space efficiency: O(n × m) where n is number of words and m is average word length.
+- Time efficiency: O(m) for all operations where m is word length.
+
+This implementation is memory-efficient for lowercase English alphabet but could be modified to support different character sets by changing the children array structure.
+
+
 #### JavaScript
 ```javascript
 class TrieNode {
