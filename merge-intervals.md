@@ -25,6 +25,135 @@ def merge(intervals):
     return output
 ```
 
+## Algorithm Overview
+
+The merge intervals algorithm takes a list of intervals (each represented as [start, end]) and combines any overlapping intervals.
+
+The algorithm works as follows:
+
+1. Sort all intervals by their start time
+2. Initialize the output with the first interval
+3. For each remaining interval:
+   - If it overlaps with the last merged interval, combine them
+   - If not, add it as a new interval to the output
+
+## Visual Explanation with ASCII Diagrams
+
+Let's use the example: `intervals = [[1,3], [2,6], [8,10], [15,18]]`
+
+### Step 1: Sort intervals
+
+Our intervals are already sorted by start time:
+```
+intervals = [[1,3], [2,6], [8,10], [15,18]]
+```
+
+### Step 2: Initialize output with first interval
+
+```
+Timeline: 0----5----10----15----20
+Interval:  [1-3]
+Output:    [1-3]
+```
+
+### Step 3: Process second interval [2,6]
+
+We compare the start of this interval (2) with the end of our last output interval (3).
+Since 2 ≤ 3, they overlap!
+
+We merge them by keeping the earliest start and the latest end:
+
+```
+Timeline: 0----5----10----15----20
+Interval:        [2----6]
+Output:    [1--------6]
+           ↑         ↑
+           |         |
+           |         +--- Extend to include new end
+           +--- Keep original start
+```
+
+### Step 4: Process third interval [8,10]
+
+We compare the start of this interval (8) with the end of our last output interval (6).
+Since 8 > 6, they don't overlap!
+
+We add this as a new interval to our output:
+
+```
+Timeline: 0----5----10----15----20
+Interval:             [8-10]
+Output:    [1--------6]
+                       [8-10]
+                       ↑
+                       |
+                       +--- Add as new separate interval
+```
+
+### Step 5: Process fourth interval [15,18]
+
+We compare the start of this interval (15) with the end of our last output interval (10).
+Since 15 > 10, they don't overlap!
+
+We add this as a new interval to our output:
+
+```
+Timeline: 0----5----10----15----20
+Interval:                     [15--18]
+Output:    [1--------6]
+                       [8-10]
+                              [15--18]
+                              ↑
+                              |
+                              +--- Add as new separate interval
+```
+
+## Final Output
+
+```
+[[1,6], [8,10], [15,18]]
+```
+
+## Edge Case Example
+
+Let's examine a slightly different example:
+`intervals = [[1,2], [3,6], [5,6]]`
+
+Processing [1,2]:
+```
+Timeline: 0----5----10
+Interval:  [1-2]
+Output:    [1-2]
+```
+
+Processing [3,6]:
+```
+Timeline: 0----5----10
+Interval:       [3------6]
+Output:    [1-2]
+                [3------6]
+```
+
+Processing [5,6]:
+```
+Timeline: 0----5----10
+Interval:           [5-6]
+Output:    [1-2]
+                [3------6]
+                    ↑
+                    |
+                    +--- Already covered, so no change
+```
+
+Final output: `[[1,2], [3,6]]`
+
+## Key Insights
+
+- The sorting step is crucial - it ensures we process intervals in order of start time
+- We only need to compare each interval with the last merged interval in our output
+- Overlapping check: if the current interval's start is less than or equal to the last end
+- When merging, we take the maximum of the two end values to ensure complete coverage
+- 
 #### JavaScript
 ```javascript
 function merge(intervals) {
