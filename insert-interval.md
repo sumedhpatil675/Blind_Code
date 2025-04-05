@@ -421,32 +421,30 @@ res = [[1,11]]
 #### JavaScript
 ```javascript
 function insert(intervals, newInterval) {
-    const res = [];
-    
-    for (let i = 0; i < intervals.length; i++) {
-        const interval = intervals[i];
-        
-        // If new interval comes before current interval
-        if (newInterval[1] < interval[0]) {
-            res.push(newInterval);
-            return [...res, ...intervals.slice(i)];
-        }
-        
-        // If current interval comes before new interval
-        else if (interval[1] < newInterval[0]) {
-            res.push(interval);
-        }
-        
-        // If there is overlap, merge them
-        else {
-            newInterval = [
-                Math.min(newInterval[0], interval[0]),
-                Math.max(newInterval[1], interval[1])
-            ];
-        }
+    let res = []
+    for(let i=0;i<intervals.length;i++)
+    {
+      let currentInterval = intervals[i]
+      let currentIntervalStart = currentInterval[0]
+      let currentIntervalEnd = currentInterval[1]
+
+      let newIntervalStart = newInterval[0]
+      let newIntervalEnd = newInterval[1]
+
+      if(newIntervalEnd<currentIntervalStart)
+      {
+        res.push(newInterval)
+        return [...res,...intervals.slice(i)]
+      }
+      else if(newIntervalStart>currentIntervalEnd)
+      {
+        res.push(intervals[i])
+      }else 
+      {
+        newInterval = [Math.min(currentIntervalStart,newIntervalStart),Math.max(currentIntervalEnd,newIntervalEnd)]
+      }
+
     }
-    
-    // Add the final merged interval
     res.push(newInterval);
     return res;
 }
