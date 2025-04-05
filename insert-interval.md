@@ -256,6 +256,168 @@ def insert(intervals, newInterval):
     return res
 ```
 
+#### Insert Interval Algorithm Explanation
+
+This algorithm inserts a new interval into a list of non-overlapping sorted intervals, and merges any overlapping intervals.
+
+### Algorithm Overview
+
+1. Create an empty result list
+2. Iterate through the existing intervals:
+   - If the new interval comes entirely before the current interval, add the new interval to the result, then add all remaining intervals and return
+   - If the new interval comes entirely after the current interval, add the current interval to the result
+   - If the new interval overlaps with the current interval, merge them into a new interval and continue
+3. After the loop, append the (possibly merged) new interval to the result
+4. Return the result
+
+### Visual Explanation with ASCII Diagrams
+
+Let's step through an example:
+```
+intervals = [[1,3], [6,9]], newInterval = [2,5]
+```
+
+#### Initial state:
+```
+Timeline: 0----5----10
+Intervals:  [1-3]     [6-9]
+newInterval:    [2-5]
+res = []
+```
+
+##### Iteration 1: intervals[0] = [1,3]
+Compare with newInterval [2,5]
+
+Since newInterval[0] = 2 ≤ intervals[0][1] = 3 AND newInterval[1] = 5 ≥ intervals[0][0] = 1, they overlap.
+
+Merge them: newInterval = [min(1,2), max(3,5)] = [1,5]
+
+```
+Timeline: 0----5----10
+Intervals:  [1-3]     [6-9]
+newInterval: [1---5]
+res = []
+```
+
+##### Iteration 2: intervals[1] = [6,9]
+Compare with newInterval [1,5]
+
+Since newInterval[1] = 5 < intervals[1][0] = 6, the new interval comes entirely before this interval.
+
+Add newInterval to res, then add all remaining intervals:
+
+```
+Timeline: 0----5----10
+Intervals:  [1-3]     [6-9]
+                      ↑
+                      |
+                      +--- Add to result
+newInterval: [1---5]
+              ↑
+              |
+              +--- Add to result
+res = [[1,5], [6,9]]
+```
+
+##### Final result:
+```
+res = [[1,5], [6,9]]
+```
+
+### Different Scenarios
+
+##### Scenario 1: New interval comes before current interval
+```
+intervals = [[3,4]], newInterval = [1,2]
+```
+
+```
+Timeline: 0----5
+Intervals:     [3-4]
+newInterval: [1-2]
+```
+
+Since 2 < 3, we add newInterval to result, then add all remaining intervals:
+```
+res = [[1,2], [3,4]]
+```
+
+##### Scenario 2: New interval comes after current interval
+```
+intervals = [[3,4]], newInterval = [5,6]
+```
+
+```
+Timeline: 0----5----
+Intervals:  [3-4]
+newInterval:      [5-6]
+```
+
+First iteration: Since 5 > 4, we add intervals[0] to result:
+```
+res = [[3,4]]
+```
+
+After loop: Add the newInterval to result:
+```
+res = [[3,4], [5,6]]
+```
+
+##### Scenario 3: Overlapping intervals in the middle
+```
+intervals = [[1,2], [5,6]], newInterval = [3,4]
+```
+
+```
+Timeline: 0----5----
+Intervals:  [1-2]    [5-6]
+newInterval:    [3-4]
+```
+
+First iteration: 3 > 2, add intervals[0] to result:
+```
+res = [[1,2]]
+```
+
+Second iteration: 4 < 5, add newInterval to result, then add all remaining intervals:
+```
+res = [[1,2], [3,4], [5,6]]
+```
+
+##### Scenario 4: New interval that overlaps multiple intervals
+```
+intervals = [[1,3], [5,7], [9,11]], newInterval = [2,10]
+```
+
+```
+Timeline: 0----5----10---
+Intervals:  [1-3] [5-7] [9-11]
+newInterval:   [2---------10]
+```
+
+First iteration: Overlap with [1,3], merge to get newInterval = [1,10]
+Second iteration: Overlap with [5,7], merge to get newInterval = [1,10]
+Third iteration: Overlap with [9,11], merge to get newInterval = [1,11]
+
+After loop: Add the merged interval:
+```
+res = [[1,11]]
+```
+
+#### Key Insights
+
+1. The algorithm handles three distinct cases:
+   - New interval comes before current interval
+   - New interval comes after current interval
+   - New interval overlaps with current interval
+
+2. The newInterval can get progressively merged with multiple intervals in the list
+
+3. The early return in the first case (newInterval[1] < intervals[i][0]) is an optimization that avoids processing the rest of the intervals when we know where the new interval belongs
+
+4. The result list is built incrementally, ensuring intervals remain in sorted order
+   
+
 #### JavaScript
 ```javascript
 function insert(intervals, newInterval) {
