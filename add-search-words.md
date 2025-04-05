@@ -181,6 +181,144 @@ class WordDictionary:
         return dfs(0, self.root)
 ```
 
+#### Basic Trie Structure
+
+```
+             ROOT
+            /   \
+           a     b
+          /       \
+         p         o
+        /           \
+       p             y
+      (*)           (*)
+```
+
+(*) indicates a complete word
+
+#### Word Addition Process
+
+Adding "app" to the Trie:
+
+```
+Step 1: Start at root
+  ROOT
+  
+Step 2: Add 'a'
+  ROOT
+   |
+   a
+
+Step 3: Add 'p'
+  ROOT
+   |
+   a
+   |
+   p
+   
+Step 4: Add final 'p' and mark as word
+  ROOT
+   |
+   a
+   |
+   p
+   |
+   p (*)
+```
+
+#### Search Process
+
+##### Regular Search for "app":
+
+```
+     ROOT
+      |
+      a ← Match 'a'
+      |
+      p ← Match 'p'
+      |
+      p ← Match 'p'
+     (*) ← Found complete word!
+```
+
+#### Wildcard Search for "a.p":
+
+```
+     ROOT
+      |
+      a ← Match 'a'
+     / \
+    ?   ? ← '.' matches ANY character (try all paths)
+   /     \
+  p       (other characters)
+  |
+  p ← Match 'p'
+ (*)
+```
+
+#### Multiple Words in Trie
+
+Trie containing "app", "apple", and "boy":
+
+```
+             ROOT
+            /    \
+           a      b
+          /        \
+         p          o
+        / \          \
+       p   l          y
+      (*) /          (*)
+         e
+        (*)
+```
+
+#### Wildcard Search Branching
+
+When searching for "a.." (a followed by any two characters):
+
+```
+        ROOT
+         |
+         a ← Match 'a'
+        / \
+  '.'→ p   (other chars)
+      / \     
+'.'→ p   l
+    (*) / 
+       e
+      (*)
+```
+
+The search branches at each wildcard, exploring all possible paths from that point.
+
+#### Search Decision Tree for ".o."
+
+```
+              ROOT
+             /  |  \
+'.'matches→ a   b   (other chars)
+           /     \
+          p       o ← Match 'o'
+         / \     /  \
+        p   l   '.'matches→ y   (other chars)
+       (*)  |              (*)
+            e
+           (*)
+```
+
+#### Failed Search Example
+
+Searching for "xyz" in our trie:
+
+```
+     ROOT
+      |
+      x ← Not found in children!
+     
+     RESULT: False (word not in trie)
+```
+
 #### JavaScript
 ```javascript
 class TrieNode {
