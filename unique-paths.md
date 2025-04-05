@@ -153,6 +153,113 @@ def uniquePaths(m: int, n: int) -> int:
     return dp[m-1][n-1]
 ```
 
+### Explanation with DP Table (3×4 Grid Example)
+
+Let's trace through the algorithm with a 3×4 grid (m=3, n=4).
+
+#### Initial DP Table
+
+When we initialize the dp table, all cells are filled with 1s. The first row and first column will always remain 1 because there is only one way to reach any cell in the first row (moving right) or first column (moving down).
+
+```
+    j=0 j=1 j=2 j=3
+    +---+---+---+---+
+i=0 | 1 | 1 | 1 | 1 |  First row remains 1
+    +---+---+---+---+
+i=1 | 1 |   |   |   |  First column 
+    +---+---+---+---+  remains 1
+i=2 | 1 |   |   |   |
+    +---+---+---+---+
+```
+
+#### Filling the DP Table
+
+Now we start filling the table using the formula `dp[i][j] = dp[i][j-1] + dp[i-1][j]`:
+
+For i=1, j=1:
+- dp[1][1] = dp[1][0] + dp[0][1] = 1 + 1 = 2
+
+```
+    j=0 j=1 j=2 j=3
+    +---+---+---+---+
+i=0 | 1 | 1 | 1 | 1 |
+    +---+---+---+---+
+i=1 | 1 | 2 |   |   |  <- dp[1][1] = 1+1 = 2
+    +---+---+---+---+
+i=2 | 1 |   |   |   |
+    +---+---+---+---+
+```
+
+For i=1, j=2:
+- dp[1][2] = dp[1][1] + dp[0][2] = 2 + 1 = 3
+
+```
+    j=0 j=1 j=2 j=3
+    +---+---+---+---+
+i=0 | 1 | 1 | 1 | 1 |
+    +---+---+---+---+
+i=1 | 1 | 2 | 3 |   |  <- dp[1][2] = 2+1 = 3
+    +---+---+---+---+
+i=2 | 1 |   |   |   |
+    +---+---+---+---+
+```
+
+For i=1, j=3:
+- dp[1][3] = dp[1][2] + dp[0][3] = 3 + 1 = 4
+
+```
+    j=0 j=1 j=2 j=3
+    +---+---+---+---+
+i=0 | 1 | 1 | 1 | 1 |
+    +---+---+---+---+
+i=1 | 1 | 2 | 3 | 4 |  <- dp[1][3] = 3+1 = 4
+    +---+---+---+---+
+i=2 | 1 |   |   |   |
+    +---+---+---+---+
+```
+
+For i=2, j=1:
+- dp[2][1] = dp[2][0] + dp[1][1] = 1 + 2 = 3
+
+```
+    j=0 j=1 j=2 j=3
+    +---+---+---+---+
+i=0 | 1 | 1 | 1 | 1 |
+    +---+---+---+---+
+i=1 | 1 | 2 | 3 | 4 |
+    +---+---+---+---+
+i=2 | 1 | 3 |   |   |  <- dp[2][1] = 1+2 = 3
+    +---+---+---+---+
+```
+
+For i=2, j=2:
+- dp[2][2] = dp[2][1] + dp[1][2] = 3 + 3 = 6
+
+```
+    j=0 j=1 j=2 j=3
+    +---+---+---+---+
+i=0 | 1 | 1 | 1 | 1 |
+    +---+---+---+---+
+i=1 | 1 | 2 | 3 | 4 |
+    +---+---+---+---+
+i=2 | 1 | 3 | 6 |   |  <- dp[2][2] = 3+3 = 6
+    +---+---+---+---+
+```
+
+For i=2, j=3:
+- dp[2][3] = dp[2][2] + dp[1][3] = 6 + 4 = 10
+
+```
+    j=0 j=1 j=2 j=3
+    +---+---+---+---+
+i=0 | 1 | 1 | 1 | 1 |
+    +---+---+---+---+
+i=1 | 1 | 2 | 3 | 4 |
+    +---+---+---+---+
+i=2 | 1 | 3 | 6 | 10 |  <- dp[2][3] = 6+4 = 10 (Final answer)
+    +---+---+---+---+
+```
+
 #### JavaScript Implementation
 
 ```javascript
