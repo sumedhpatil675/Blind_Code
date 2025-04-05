@@ -177,6 +177,214 @@ class Solution:
         return False
 ```
 
+## Example with ASCII Diagrams
+
+Let's consider a 3×4 board and the word "ABCCED":
+
+```
+    0   1   2   3
+  +---+---+---+---+
+0 | A | B | C | E |
+  +---+---+---+---+
+1 | S | F | C | S |
+  +---+---+---+---+
+2 | A | D | E | E |
+  +---+---+---+---+
+```
+
+### Illustration of DFS Steps
+
+Let's trace through the algorithm looking for the word "ABCCED":
+
+1. Start at each cell and try to find the word starting with 'A'.
+2. For this example, we'll start at (0,0) which contains 'A'.
+
+#### Step 1: Start DFS from board[0][0] = 'A'
+
+```
+    0   1   2   3
+  +---+---+---+---+
+0 | A*| B | C | E |  * Current position
+  +---+---+---+---+
+1 | S | F | C | S |
+  +---+---+---+---+
+2 | A | D | E | E |
+  +---+---+---+---+
+
+visited = [
+  [True, False, False, False],
+  [False, False, False, False],
+  [False, False, False, False]
+]
+
+i = 0, word[i] = 'A', matches board[0][0]
+Mark visited[0][0] = True
+```
+
+#### Step 2: Move to board[0][1] = 'B'
+
+```
+    0   1   2   3
+  +---+---+---+---+
+0 | A | B*| C | E |  * Current position
+  +---+---+---+---+
+1 | S | F | C | S |
+  +---+---+---+---+
+2 | A | D | E | E |
+  +---+---+---+---+
+
+visited = [
+  [True, True, False, False],
+  [False, False, False, False],
+  [False, False, False, False]
+]
+
+i = 1, word[i] = 'B', matches board[0][1]
+Mark visited[0][1] = True
+```
+
+#### Step 3: Move to board[0][2] = 'C'
+
+```
+    0   1   2   3
+  +---+---+---+---+
+0 | A | B | C*| E |  * Current position
+  +---+---+---+---+
+1 | S | F | C | S |
+  +---+---+---+---+
+2 | A | D | E | E |
+  +---+---+---+---+
+
+visited = [
+  [True, True, True, False],
+  [False, False, False, False],
+  [False, False, False, False]
+]
+
+i = 2, word[i] = 'C', matches board[0][2]
+Mark visited[0][2] = True
+```
+
+#### Step 4: Move to board[1][2] = 'C'
+
+```
+    0   1   2   3
+  +---+---+---+---+
+0 | A | B | C | E |
+  +---+---+---+---+
+1 | S | F | C*| S |  * Current position
+  +---+---+---+---+
+2 | A | D | E | E |
+  +---+---+---+---+
+
+visited = [
+  [True, True, True, False],
+  [False, False, True, False],
+  [False, False, False, False]
+]
+
+i = 3, word[i] = 'C', matches board[1][2]
+Mark visited[1][2] = True
+```
+
+#### Step 5: Move to board[2][2] = 'E'
+
+```
+    0   1   2   3
+  +---+---+---+---+
+0 | A | B | C | E |
+  +---+---+---+---+
+1 | S | F | C | S |
+  +---+---+---+---+
+2 | A | D | E*| E |  * Current position
+  +---+---+---+---+
+
+visited = [
+  [True, True, True, False],
+  [False, False, True, False],
+  [False, False, True, False]
+]
+
+i = 4, word[i] = 'E', matches board[2][2]
+Mark visited[2][2] = True
+```
+
+#### Step 6: Move to board[2][1] = 'D'
+
+```
+    0   1   2   3
+  +---+---+---+---+
+0 | A | B | C | E |
+  +---+---+---+---+
+1 | S | F | C | S |
+  +---+---+---+---+
+2 | A | D*| E | E |  * Current position
+  +---+---+---+---+
+
+visited = [
+  [True, True, True, False],
+  [False, False, True, False],
+  [False, True, True, False]
+]
+
+i = 5, word[i] = 'D', matches board[2][1]
+Mark visited[2][1] = True
+```
+
+#### Step 7: Complete!
+
+We've found all characters of "ABCCED", so the function returns `True`.
+
+The path we took:
+```
+    0   1   2   3
+  +---+---+---+---+
+0 | 1 | 2 | 3 | - |  Numbers show our path
+  +---+---+---+---+
+1 | - | - | 4 | - |
+  +---+---+---+---+
+2 | - | 6 | 5 | - |
+  +---+---+---+---+
+```
+
+## Backtracking Process
+
+The DFS function uses backtracking:
+
+1. If we've found all characters of the word, return `True`
+2. If we go out of bounds, current character doesn't match, or we've already visited this cell, return `False`
+3. Otherwise, mark current cell as visited
+4. Recursively explore all four adjacent cells (up, down, left, right)
+5. If any of these paths lead to success, return `True`
+6. Before returning, mark the current cell as unvisited (backtrack)
+
+### Visualizing the visited matrix during backtracking:
+
+When we explore a path that doesn't work, we backtrack and reset the visited status:
+
+```
+After trying an unsuccessful path:
+
+visited = [
+  [True, True, True, False],
+  [False, False, True, False],
+  [False, True, True, False]
+]
+
+During backtracking, we set visited[2][1] = False:
+
+visited = [
+  [True, True, True, False],
+  [False, False, True, False],
+  [False, False, True, False]
+]
+
+And continue backtracking as needed...
+```
+
+This backtracking allows us to reuse cells for different paths, as long as we don't reuse the same cell within a single path.
+
+
 #### JavaScript
 ```javascript
 /**
