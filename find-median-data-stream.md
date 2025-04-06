@@ -133,50 +133,285 @@ class MedianFinder:
 #### JavaScript
 ```javascript
 /**
- * initialize your data structure here.
+ * NumberStream class for finding the median of a data stream
  */
-var MedianFinder = function() {
-    this.small = new MinPriorityQueue({ priority: x => -x }); // Max heap using negation
-    this.large = new MinPriorityQueue(); // Min heap
-};
+class NumberStream {
+  constructor() {
+    // Max heap to store the smaller half of the numbers
+    this.maxHeap = [];
+    // Min heap to store the larger half of the numbers
+    this.minHeap = [];
+  }
 
-/** 
- * @param {number} num
- * @return {void}
- */
-MedianFinder.prototype.addNum = function(num) {
-    // Add to the appropriate heap
-    if (this.large.size() > 0 && num > this.large.front().element) {
-        this.large.enqueue(num);
-    } else {
-        this.small.enqueue(-num); // Insert as negative to simulate max heap
-    }
+  /**
+   * Adds a number into the data structure
+   * @param {number} num - The number to add
+   */
+  add(num) {
+    // Add the new number to the max heap
+    this.addNumberToHeap(this.maxHeap, num, (a, b) => b - a);
     
-    // Balance heaps
-    if (this.small.size() > this.large.size() + 1) {
-        const val = -this.small.dequeue().element; // Convert back to positive
-        this.large.enqueue(val);
-    }
+    // Balance the heaps: move the largest number from maxHeap to minHeap
+    this.addNumberToHeap(
+      this.minHeap,
+      this.removeTopFromHeap(this.maxHeap),
+      (a, b) => a - b
+    );
     
-    if (this.large.size() > this.small.size() + 1) {
-        const val = this.large.dequeue().element;
-        this.small.enqueue(-val); // Convert to negative for max heap
+    // Ensure that maxHeap has more elements than minHeap if their sizes differ
+    if (this.maxHeap.length < this.minHeap.length) {
+      this.addNumberToHeap(
+        this.maxHeap,
+        this.removeTopFromHeap(this.minHeap),
+        (a, b) => b - a
+      );
     }
-};
+  }
 
-/**
- * @return {number}
- */
-MedianFinder.prototype.findMedian = function() {
-    if (this.small.size() > this.large.size()) {
-        return -this.small.front().element; // Convert back to positive
-    } else if (this.large.size() > this.small.size()) {
-        return this.large.front().element;
+  /**
+   * Returns the median of the current data stream
+   * @returns {number} The median value
+   */
+  getMedian() {
+    // If maxHeap has more elements, the median is its top element
+    if (this.maxHeap.length > this.minHeap.length) {
+      return this.maxHeap[0];
+    }
+    // Otherwise, the median is the average of the tops of maxHeap and minHeap
+    else {
+      return (this.maxHeap[0] + this.minHeap[0]) * 0.5;
+    }
+  }
+
+  /**
+   * Utility function to add a number to a heap, maintaining the heap property
+   * @param {number[]} heap - The heap array
+   * @param {number} num - The number to add
+   * @param {Function} comparator - The comparison function
+   */
+  addNumberToHeap(heap, num, comparator) {
+    heap.push(num);
+    let i = heap.length - 1;
+    while (i > 0) {
+      let parent = Math.floor((i - 1) / 2);
+      if (comparator(heap[i], heap[parent]) > 0) {
+        [heap[i], heap[parent]] = [heap[parent], heap[i]];
+        i = parent;
+      } else {
+        break;
+      }
+    }
+  }
+
+  /**
+   * Utility function to remove the top element from a heap, maintaining the heap property
+   * @param {number[]} heap - The heap array
+   * @returns {number} The top element
+   */
+  removeTopFromHeap(heap) {
+    if (heap.length === 0) return NaN;
+    const top = heap[0];
+    const last = heap.pop();
+    if (heap.length > 0 && last !== undefined) {
+      heap[0] = last;
+      this.heapify(heap, 0, (a, b) => (heap === this.maxHeap ? b - a : a - b));
+    }
+    return top;
+  }
+
+  /**
+   * Utility function to maintain the heap property from the given index downwards
+   * @param {number[]} heap - The heap array
+   * @param {number} i - The index to start heapify from
+   * @param {Function} comparator - The comparison function
+   */
+  heapify(heap, i, comparator) {
+    const length = heap.length;
+    let largest = i;
+    const left = 2 * i + 1;
+    const right = 2 * i + 2;
+    
+    if (left < length && comparator(heap[left], heap[largest]) > 0) {
+      largest = left;
     }
     
-    return (-this.small.front().element + this.large.front().element) / 2;
-};
+    if (right < length && comparator(heap[right], heap[largest]) > 0) {
+      largest = right;
+    }
+    
+    if (largest !== i) {
+      [heap[i], heap[largest]] = [heap[largest], heap[i]];
+      this.heapify(heap, largest, comparator);
+    }
+  }
+}
+
+// Export the class for use in other files
+export default NumberStream;
+
 ```
+
+##### NumberStream Class: Finding the Median of a Data Stream
+
+The `NumberStream` class is designed to efficiently track the median value of a continuous stream of numbers. This is a common problem in data processing where you need to find the middle value in a dynamic dataset that's constantly receiving new numbers.
+
+#### Core Concept
+
+The key insight of this implementation is using two heaps to partition the data:
+
+1. **Max Heap** - Stores the smaller half of the numbers
+2. **Min Heap** - Stores the larger half of the numbers
+
+With this arrangement, the median is always accessible in O(1) time complexity.
+
+#### ASCII Visualization
+
+Here's how the data structure looks conceptually:
+
+```
+                Median
+                   ↓
+  Max Heap      |   |      Min Heap
+ (smaller half) |   |    (larger half)
+                |   |
+  [5, 3, 1]     |   |     [8, 10, 15]
+     ↑          |   |        ↑
+  Largest of    |   |    Smallest of
+  smaller half  |   |    larger half
+```
+
+#### Adding a Number to the Stream
+
+When adding a new number, the algorithm follows these steps:
+
+1. Add the number to the max heap
+2. Move the largest element from max heap to min heap
+3. If max heap has fewer elements than min heap, move the smallest element from min heap back to max heap
+
+Let's visualize this with an example:
+
+#### Initial state (empty):
+```
+  Max Heap: []
+  Min Heap: []
+```
+
+#### After adding 10:
+```
+  Max Heap: [10]   <- Median is 10
+  Min Heap: []
+```
+
+#### After adding 5:
+```
+  Add 5 to Max Heap: [10, 5]
+  Move 10 to Min Heap
+  
+  Max Heap: [5]    <- Median is 5
+  Min Heap: [10]
+```
+
+#### After adding 15:
+```
+  Add 15 to Max Heap: [15, 5]
+  Heapify max heap: [15, 5]
+  Move 15 to Min Heap
+  
+  Max Heap: [5]
+  Min Heap: [10, 15]  
+  
+  Median is 7.5 (average of 5 and 10)
+```
+
+#### After adding 3:
+```
+  Add 3 to Max Heap: [5, 3]
+  Move 5 to Min Heap
+  
+  Max Heap: [3]
+  Min Heap: [5, 10, 15]
+  
+  Since Max Heap has fewer elements, move 5 back to Max Heap
+  
+  Max Heap: [5, 3]  <- Median is 5
+  Min Heap: [10, 15]
+```
+
+#### Heap Implementation
+
+The class uses arrays to implement the heaps, with utility functions to maintain the heap property:
+
+##### Heap Structure for Max Heap (with array indices):
+```
+       [0]
+       / \
+    [1]   [2]
+    / \   / \
+  [3] [4] ...
+```
+
+#### Heap Operations
+
+1. **addNumberToHeap**: Adds a number to a heap and bubbles it up to maintain the heap property.
+
+```
+Example: Adding 7 to Max Heap [10, 5, 3]
+
+1. Insert at end: [10, 5, 3, 7]
+2. Bubble up: Compare 7 with parent (5)
+   7 > 5, so swap: [10, 7, 3, 5]
+3. Compare 7 with parent (10)
+   7 < 10, so stop
+4. Final Max Heap: [10, 7, 3, 5]
+```
+
+2. **removeTopFromHeap**: Removes the top element, replaces it with the last element, and sifts it down.
+
+```
+Example: Removing top from Max Heap [10, 7, 3, 5]
+
+1. Save top: 10
+2. Replace with last: [5, 7, 3]
+3. Sift down: 5 < 7, so swap with larger child
+   [7, 5, 3]
+4. Final Max Heap: [7, 5, 3]
+```
+
+3. **heapify**: Ensures the heap property is maintained by sifting an element down.
+
+```
+Example: Heapify on Max Heap [5, 7, 3] at index 0
+
+1. Find largest among [0], [1], [2]
+   5 < 7, so largest = 1
+2. Swap [0] and [1]: [7, 5, 3]
+3. Recursively heapify at 1
+   Compare 5 and 3, 5 > 3, so stop
+4. Final Max Heap: [7, 5, 3]
+```
+
+#### Calculating the Median
+
+The median calculation is straightforward:
+
+1. If max heap has more elements than min heap, the median is the top of max heap.
+2. If both heaps have the same number of elements, the median is the average of the tops of both heaps.
+
+#### Time and Space Complexity
+
+- **Time Complexity**:
+  - Adding a number: O(log n)
+  - Getting the median: O(1)
+
+- **Space Complexity**: O(n) where n is the number of elements in the stream.
+
+#### Use Cases
+
+This data structure is particularly useful for:
+- Financial data analysis where you need the running median
+- Traffic monitoring systems
+- Any system that needs to process a continuous stream of data while maintaining the median
+  
 
 #### Java
 ```java
