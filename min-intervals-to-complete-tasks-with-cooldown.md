@@ -8,8 +8,8 @@ Determine the minimum number of intervals required to complete all tasks, while 
 
 ### Input
 
-- `tasks`: An array of characters, where each task is represented as a letter (A-Z)
-- `k`: An integer representing the cooldown period, the minimum number of intervals between two executions of the same task
+- `tasks: string[]`: An array of characters, where each task is represented as a letter (A-Z)
+- `k: number`: An integer representing the cooldown period, the minimum number of intervals between two executions of the same task
 
 ### Examples
 
@@ -29,7 +29,7 @@ Input: tasks = ["A","C","A","B","D","B"], k = 1
 Output: 6
 ```
 
-Explanation: The tasks 'A', 'B', and 'C' appear multiple times, but the cooldown is only 1. After completing one 'A', we can immediately complete another 'A' after just one other task. A valid sequence could look like this: 'A' -> 'C' -> 'A' -> 'B' -> 'D' -> 'B'. Thus, the total number of intervals required is 6.
+Explanation: The tasks 'A', 'B', 'C', and 'D' appear multiple times, but the cooldown is only 1. After completing one 'A', we need at least one other task before executing 'A' again. A valid sequence could look like this: 'A' -> 'C' -> 'A' -> 'B' -> 'D' -> 'B'. Thus, the total number of intervals required is 6.
 
 **Example 3:**
 
@@ -48,11 +48,26 @@ Explanation: The cooldown is 3, meaning after completing a task, we must wait fo
 
 ## Solution Approach
 
-The key insight to solving this problem efficiently is recognizing that the most frequent task(s) will determine the minimum number of intervals needed.
+The provided solution follows a different approach compared to the standard formula. Let's break it down step by step:
+
+1. Count the frequency of each task (how many times each task appears)
+2. Find the maximum frequency and count how many tasks have this maximum frequency
+3. Calculate the idle slots needed based on these values
+4. Determine the final result
+
+### Key Variables in the Solution
+
+- `maximum`: The highest frequency of any task
+- `maxCount`: The number of tasks that have this maximum frequency
+- `partCount`: Number of gaps between occurrences of the most frequent tasks (maximum - 1)
+- `partLength`: Maximum number of other tasks that can fit in each gap (k - (maxCount - 1))
+- `emptySlots`: Total number of potential empty slots (partCount \* partLength)
+- `availableTasks`: Number of tasks available to fill empty slots (tasks.length - maximum \* maxCount)
+- `idles`: Number of slots that must remain idle (max(0, emptySlots - availableTasks))
 
 ### Explanation with ASCII Diagrams
 
-Let's work through the examples to understand the approach:
+To better understand this solution, let's visualize the process with ASCII diagrams using our examples.
 
 #### Example 1: tasks = ["A","A","A","B","B","B"], k = 2
 
@@ -63,22 +78,23 @@ A: 3 occurrences
 B: 3 occurrences
 ```
 
-The most frequent tasks are A and B, both occurring 3 times with max frequency = 3.
+Maximum frequency = 3, and maxCount = 2 (both A and B have max frequency)
 
-Let's visualize a possible execution sequence:
+We can arrange tasks to minimize idle time by scheduling the most frequent tasks first, then filling in with less frequent tasks:
 
 ```
-Position: 1  2  3  4  5  6  7  8
-Tasks:    A  B  _  A  B  _  A  B
-          ^     ^     ^
-          |     |     |
-A executions    |     |
-             cooldown |
-                      |
+| 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+| A | B |   | A | B |   | A | B |
 ```
 
-Every A must have at least 2 positions between them (similarly for B).
-The total intervals required is 8.
+In our solution:
+
+- `partCount` = maximum - 1 = 3 - 1 = 2 (two gaps between three A's)
+- `partLength` = k - (maxCount - 1) = 2 - (2 - 1) = 1 (one slot in each gap)
+- `emptySlots` = partCount _ partLength = 2 _ 1 = 2
+- `availableTasks` = tasks.length - maximum _ maxCount = 6 - 3 _ 2 = 0
+- `idles` = max(0, emptySlots - availableTasks) = max(0, 2 - 0) = 2
+- Total intervals = tasks.length + idles = 6 + 2 = 8
 
 #### Example 2: tasks = ["A","C","A","B","D","B"], k = 1
 
@@ -91,69 +107,88 @@ C: 1 occurrence
 D: 1 occurrence
 ```
 
-With cooldown k = 1, we need at least 1 interval between the same tasks:
+Maximum frequency = 2, and maxCount = 2 (both A and B have max frequency)
+
+When arranged optimally:
 
 ```
-Position: 1  2  3  4  5  6
-Tasks:    A  C  A  B  D  B
-          ^     ^
-          |     |
-A executions    |
-             cooldown
+| 1 | 2 | 3 | 4 | 5 | 6 |
+| A | C | A | B | D | B |
 ```
 
-We can arrange tasks without any idle intervals because the cooldown is only 1 and we have enough different tasks. The total intervals required is 6.
+In our solution:
+
+- `partCount` = maximum - 1 = 2 - 1 = 1 (one gap between two A's)
+- `partLength` = k - (maxCount - 1) = 1 - (2 - 1) = 0 (no slots in each gap)
+- `emptySlots` = partCount _ partLength = 1 _ 0 = 0
+- `availableTasks` = tasks.length - maximum _ maxCount = 6 - 2 _ 2 = 2
+- `idles` = max(0, emptySlots - availableTasks) = max(0, 0 - 2) = 0
+- Total intervals = tasks.length + idles = 6 + 0 = 6
 
 #### Example 3: tasks = ["A","A","A","B","B","B"], k = 3
 
-The frequencies are the same as Example 1, but with a larger cooldown:
+With the same frequencies as Example 1 but a larger cooldown:
 
 ```
-A: 3 occurrences
-B: 3 occurrences
+| 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+| A | B |   |   | A | B |   |   | A | B  |
 ```
 
-With k = 3, we need at least 3 positions between the same tasks:
+In our solution:
 
-```
-Position: 1  2  3  4  5  6  7  8  9  10
-Tasks:    A  B  _  _  A  B  _  _  A  B
-          ^           ^           ^
-          |           |           |
-A executions          |           |
-                   cooldown       |
-                                  |
-```
-
-Here, we need to add idle intervals (\_) to satisfy the cooldown constraint. The total intervals required is 10.
-
-### Mathematical Formula
-
-The formula to calculate the minimum number of intervals is:
-
-```
-min_intervals = max((maxFrequency - 1) * (k + 1) + maxFrequencyCount, totalTasks)
-```
-
-Where:
-
-- `maxFrequency` is the highest number of occurrences of any task
-- `maxFrequencyCount` is the number of tasks that have this maximum frequency
-- `totalTasks` is the total number of tasks to execute
-
-#### Breaking down the formula:
-
-1. `(maxFrequency - 1)` represents the number of gaps between occurrences of the most frequent task
-2. Each gap needs to be at least of size `(k + 1)` to accommodate the cooldown
-3. `maxFrequencyCount` represents the number of tasks that need to be placed at the end
-4. We take the maximum of this calculation and the total number of tasks because in some cases, we might have enough different tasks to avoid idle intervals
+- `partCount` = maximum - 1 = 3 - 1 = 2 (two gaps between three A's)
+- `partLength` = k - (maxCount - 1) = 3 - (2 - 1) = 2 (two slots in each gap)
+- `emptySlots` = partCount _ partLength = 2 _ 2 = 4
+- `availableTasks` = tasks.length - maximum _ maxCount = 6 - 3 _ 2 = 0
+- `idles` = max(0, emptySlots - availableTasks) = max(0, 4 - 0) = 4
+- Total intervals = tasks.length + idles = 6 + 4 = 10
 
 ## Implementations
 
-### Python Solution
+### JavaScript Implementation
+
+```javascript
+/**
+ * Calculate the minimum number of intervals required to complete all tasks with cooldown
+ * @param {string[]} tasks - Array of tasks represented as uppercase letters
+ * @param {number} k - Cooldown period between same tasks
+ * @return {number} - Minimum number of intervals required
+ */
+function taskCoordinator(tasks, k) {
+  // Array to store the frequency of each task (26 letters, A-Z)
+  const counter = new Array(26).fill(0);
+  let maximum = 0; // Maximum frequency of any task
+  let maxCount = 0; // Number of tasks with maximum frequency
+
+  // Traverse through tasks to calculate task frequencies
+  for (const task of tasks) {
+    const index = task.charCodeAt(0) - "A".charCodeAt(0);
+    counter[index]++;
+
+    if (maximum === counter[index]) {
+      maxCount++;
+    } else if (maximum < counter[index]) {
+      maximum = counter[index];
+      maxCount = 1;
+    }
+  }
+
+  // Calculate idle slots, available tasks, and idles needed
+  const partCount = maximum - 1;
+  const partLength = k - (maxCount - 1);
+  const emptySlots = partCount * partLength;
+  const availableTasks = tasks.length - maximum * maxCount;
+  const idles = Math.max(0, emptySlots - availableTasks);
+
+  // Return the total time required
+  return tasks.length + idles;
+}
+```
+
+### Python Implementation
 
 ```python
-def leastInterval(tasks, k):
+def taskCoordinator(tasks, k):
     """
     Calculate the minimum number of intervals required to complete all tasks with cooldown
 
@@ -164,94 +199,37 @@ def leastInterval(tasks, k):
     Returns:
         int - Minimum number of intervals required
     """
-    # Edge case: if k is 0, we can execute tasks consecutively
-    if k == 0:
-        return len(tasks)
+    # Array to store the frequency of each task (26 letters, A-Z)
+    counter = [0] * 26
+    maximum = 0  # Maximum frequency of any task
+    max_count = 0  # Number of tasks with maximum frequency
 
-    # Count the frequency of each task
-    frequency_map = {}
+    # Traverse through tasks to calculate task frequencies
     for task in tasks:
-        frequency_map[task] = frequency_map.get(task, 0) + 1
+        index = ord(task) - ord('A')
+        counter[index] += 1
 
-    # Find the maximum frequency
-    max_frequency = 0
-    max_frequency_count = 0
+        if maximum == counter[index]:
+            max_count += 1
+        elif maximum < counter[index]:
+            maximum = counter[index]
+            max_count = 1
 
-    for task, frequency in frequency_map.items():
-        if frequency > max_frequency:
-            max_frequency = frequency
-            max_frequency_count = 1
-        elif frequency == max_frequency:
-            max_frequency_count += 1
+    # Calculate idle slots, available tasks, and idles needed
+    part_count = maximum - 1
+    part_length = k - (max_count - 1)
+    empty_slots = part_count * part_length
+    available_tasks = len(tasks) - maximum * max_count
+    idles = max(0, empty_slots - available_tasks)
 
-    # Calculate the minimum intervals needed
-    min_intervals = max(
-        (max_frequency - 1) * (k + 1) + max_frequency_count,
-        len(tasks)
-    )
-
-    return min_intervals
-
-# Test cases
-print(leastInterval(["A","A","A","B","B","B"], 2))  # Output: 8
-print(leastInterval(["A","C","A","B","D","B"], 1))  # Output: 6
-print(leastInterval(["A","A","A","B","B","B"], 3))  # Output: 10
+    # Return the total time required
+    return len(tasks) + idles
 ```
 
-### JavaScript Solution
-
-```javascript
-/**
- * Calculate the minimum number of intervals required to complete all tasks with cooldown
- * @param {string[]} tasks - Array of tasks represented as uppercase letters
- * @param {number} k - Cooldown period between same tasks
- * @return {number} - Minimum number of intervals required
- */
-function leastInterval(tasks, k) {
-  // Edge case: if k is 0, we can execute tasks consecutively
-  if (k === 0) return tasks.length;
-
-  // Count the frequency of each task
-  const frequencyMap = new Map();
-  for (const task of tasks) {
-    frequencyMap.set(task, (frequencyMap.get(task) || 0) + 1);
-  }
-
-  // Find the maximum frequency
-  let maxFrequency = 0;
-  let maxFrequencyCount = 0;
-
-  for (const [task, frequency] of frequencyMap) {
-    if (frequency > maxFrequency) {
-      maxFrequency = frequency;
-      maxFrequencyCount = 1;
-    } else if (frequency === maxFrequency) {
-      maxFrequencyCount++;
-    }
-  }
-
-  // Calculate the minimum intervals needed
-  const minIntervals = Math.max(
-    (maxFrequency - 1) * (k + 1) + maxFrequencyCount,
-    tasks.length
-  );
-
-  return minIntervals;
-}
-
-// Test cases
-console.log(leastInterval(["A", "A", "A", "B", "B", "B"], 2)); // Output: 8
-console.log(leastInterval(["A", "C", "A", "B", "D", "B"], 1)); // Output: 6
-console.log(leastInterval(["A", "A", "A", "B", "B", "B"], 3)); // Output: 10
-```
-
-### Java Solution
+### Java Implementation
 
 ```java
-import java.util.HashMap;
-import java.util.Map;
-
-public class TaskCoordination {
+public class TaskCoordinator {
     /**
      * Calculate the minimum number of intervals required to complete all tasks with cooldown
      *
@@ -259,45 +237,41 @@ public class TaskCoordination {
      * @param k Cooldown period between same tasks
      * @return Minimum number of intervals required
      */
-    public static int leastInterval(char[] tasks, int k) {
-        // Edge case: if k is 0, we can execute tasks consecutively
-        if (k == 0) {
-            return tasks.length;
-        }
+    public static int taskCoordinator(char[] tasks, int k) {
+        // Array to store the frequency of each task (26 letters, A-Z)
+        int[] counter = new int[26];
+        int maximum = 0; // Maximum frequency of any task
+        int maxCount = 0; // Number of tasks with maximum frequency
 
-        // Count the frequency of each task
-        Map<Character, Integer> frequencyMap = new HashMap<>();
+        // Traverse through tasks to calculate task frequencies
         for (char task : tasks) {
-            frequencyMap.put(task, frequencyMap.getOrDefault(task, 0) + 1);
-        }
+            int index = task - 'A';
+            counter[index]++;
 
-        // Find the maximum frequency
-        int maxFrequency = 0;
-        int maxFrequencyCount = 0;
-
-        for (int frequency : frequencyMap.values()) {
-            if (frequency > maxFrequency) {
-                maxFrequency = frequency;
-                maxFrequencyCount = 1;
-            } else if (frequency == maxFrequency) {
-                maxFrequencyCount++;
+            if (maximum == counter[index]) {
+                maxCount++;
+            } else if (maximum < counter[index]) {
+                maximum = counter[index];
+                maxCount = 1;
             }
         }
 
-        // Calculate the minimum intervals needed
-        int minIntervals = Math.max(
-            (maxFrequency - 1) * (k + 1) + maxFrequencyCount,
-            tasks.length
-        );
+        // Calculate idle slots, available tasks, and idles needed
+        int partCount = maximum - 1;
+        int partLength = k - (maxCount - 1);
+        int emptySlots = partCount * partLength;
+        int availableTasks = tasks.length - maximum * maxCount;
+        int idles = Math.max(0, emptySlots - availableTasks);
 
-        return minIntervals;
+        // Return the total time required
+        return tasks.length + idles;
     }
 
     public static void main(String[] args) {
         // Test cases
-        System.out.println(leastInterval(new char[]{'A','A','A','B','B','B'}, 2)); // Output: 8
-        System.out.println(leastInterval(new char[]{'A','C','A','B','D','B'}, 1)); // Output: 6
-        System.out.println(leastInterval(new char[]{'A','A','A','B','B','B'}, 3)); // Output: 10
+        System.out.println(taskCoordinator(new char[]{'A','A','A','B','B','B'}, 2)); // Output: 8
+        System.out.println(taskCoordinator(new char[]{'A','C','A','B','D','B'}, 1)); // Output: 6
+        System.out.println(taskCoordinator(new char[]{'A','A','A','B','B','B'}, 3)); // Output: 10
     }
 }
 ```
@@ -305,4 +279,4 @@ public class TaskCoordination {
 ## Time and Space Complexity
 
 - **Time Complexity**: O(n) where n is the number of tasks. We iterate through the tasks once to count frequencies.
-- **Space Complexity**: O(1) since there are at most 26 different tasks (A-Z), so our frequency map will have at most 26 entries.
+- **Space Complexity**: O(1) since we use a fixed-size array of 26 elements to store the frequencies of tasks (A-Z).
