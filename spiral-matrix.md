@@ -10,82 +10,87 @@ Given an m x n matrix, return all elements of the matrix in spiral order.
 
 #### Python
 ```python
-def spiralOrder(matrix):
-    if not matrix:
-        return []
-    
-    result = []
-    rows, cols = len(matrix), len(matrix[0])
-    left, right = 0, cols - 1
-    top, bottom = 0, rows - 1
-    
-    while left <= right and top <= bottom:
-        # Traverse right
-        for j in range(left, right + 1):
-            result.append(matrix[top][j])
-        top += 1
+from typing import List
+
+class Solution:
+    def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
+        if not matrix:
+            return []
+            
+        left, right = 0, len(matrix[0])
+        top, bottom = 0, len(matrix)
+        res = []
         
-        # Traverse down
-        for i in range(top, bottom + 1):
-            result.append(matrix[i][right])
-        right -= 1
-        
-        # Traverse left
-        if top <= bottom:
-            for j in range(right, left - 1, -1):
-                result.append(matrix[bottom][j])
+        while left < right and top < bottom:
+            # left->right, traversing top-left to top-right
+            for i in range(left, right):
+                res.append(matrix[top][i])
+            top += 1
+            
+            # top->bottom, traversing top-right to bottom-right
+            for i in range(top, bottom):
+                res.append(matrix[i][right-1])
+            right -= 1
+            
+            if not (left < right and top < bottom):
+                break
+                
+            # right->left, traversing from bottom-right to bottom-left
+            for i in range(right-1, left-1, -1):
+                res.append(matrix[bottom-1][i])
             bottom -= 1
-        
-        # Traverse up
-        if left <= right:
-            for i in range(bottom, top - 1, -1):
-                result.append(matrix[i][left])
+            
+            # bottom->top, traversing from bottom-left to top-left
+            for i in range(bottom-1, top-1, -1):
+                res.append(matrix[i][left])
             left += 1
-    
-    return result
+            
+        return res
 ```
 
 #### JavaScript
 ```javascript
+/**
+ * @param {number[][]} matrix
+ * @return {number[]}
+ */
 function spiralOrder(matrix) {
-    if (!matrix.length) {
-        return [];
-    }
+    if (matrix.length === 0) return [];
     
-    const result = [];
-    const rows = matrix.length;
-    const cols = matrix[0].length;
-    let left = 0, right = cols - 1;
-    let top = 0, bottom = rows - 1;
+    let left = 0;
+    let right = matrix[0].length;
+    let top = 0;
+    let bottom = matrix.length;
+    let result = [];
     
-    while (left <= right && top <= bottom) {
-        // Traverse right
-        for (let j = left; j <= right; j++) {
-            result.push(matrix[top][j]);
+    while (left < right && top < bottom) {
+        // left->right, traversing top-left to top-right
+        for (let i = left; i < right; i++) {
+            result.push(matrix[top][i]);
         }
         top++;
         
-        // Traverse down
-        for (let i = top; i <= bottom; i++) {
-            result.push(matrix[i][right]);
+        // top->bottom, traversing top-right to bottom-right
+        for (let i = top; i < bottom; i++) {
+            result.push(matrix[i][right - 1]);
         }
         right--;
         
-        // Traverse left
-        if (top <= bottom) {
-            for (let j = right; j >= left; j--) {
-                result.push(matrix[bottom][j]);
-            }
-            bottom--;
+        if (!(left < right && top < bottom)) {
+            break;
         }
         
-        // Traverse up
-        if (left <= right) {
-            for (let i = bottom; i >= top; i--) {
-                result.push(matrix[i][left]);
-            }
-            left++;
+        // right->left, traversing from bottom-right to bottom-left
+        for (let i = right - 1; i >= left; i--) {
+            result.push(matrix[bottom - 1][i]);
         }
+        bottom--;
+        
+        // bottom->top, traversing from bottom-left to top-left
+        for (let i = bottom - 1; i >= top; i--) {
+            result.push(matrix[i][left]);
+        }
+        left++;
     }
     
     return result;
@@ -94,48 +99,51 @@ function spiralOrder(matrix) {
 
 #### Java
 ```java
-public List<Integer> spiralOrder(int[][] matrix) {
-    List<Integer> result = new ArrayList<>();
-    if (matrix == null || matrix.length == 0) {
-        return result;
-    }
-    
-    int rows = matrix.length;
-    int cols = matrix[0].length;
-    int left = 0, right = cols - 1;
-    int top = 0, bottom = rows - 1;
-    
-    while (left <= right && top <= bottom) {
-        // Traverse right
-        for (int j = left; j <= right; j++) {
-            result.add(matrix[top][j]);
-        }
-        top++;
+class Solution {
+    public List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> result = new ArrayList<>();
         
-        // Traverse down
-        for (int i = top; i <= bottom; i++) {
-            result.add(matrix[i][right]);
+        if (matrix == null || matrix.length == 0) {
+            return result;
         }
-        right--;
         
-        // Traverse left
-        if (top <= bottom) {
-            for (int j = right; j >= left; j--) {
-                result.add(matrix[bottom][j]);
+        int left = 0;
+        int right = matrix[0].length;
+        int top = 0;
+        int bottom = matrix.length;
+        
+        while (left < right && top < bottom) {
+            // left->right, traversing top-left to top-right
+            for (int i = left; i < right; i++) {
+                result.add(matrix[top][i]);
+            }
+            top++;
+            
+            // top->bottom, traversing top-right to bottom-right
+            for (int i = top; i < bottom; i++) {
+                result.add(matrix[i][right - 1]);
+            }
+            right--;
+            
+            if (!(left < right && top < bottom)) {
+                break;
+            }
+            
+            // right->left, traversing from bottom-right to bottom-left
+            for (int i = right - 1; i >= left; i--) {
+                result.add(matrix[bottom - 1][i]);
             }
             bottom--;
-        }
-        
-        // Traverse up
-        if (left <= right) {
-            for (int i = bottom; i >= top; i--) {
+            
+            // bottom->top, traversing from bottom-left to top-left
+            for (int i = bottom - 1; i >= top; i--) {
                 result.add(matrix[i][left]);
             }
             left++;
         }
+        
+        return result;
     }
-    
-    return result;
 }
 ```
 
