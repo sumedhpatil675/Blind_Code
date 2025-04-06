@@ -70,84 +70,102 @@ public void rotate(int[][] matrix) {
 - **Space complexity**: O(1)
 
 #### Python
+
 ```python
-def rotate(matrix):
-    n = len(matrix)
-    for layer in range(n // 2):
-        first, last = layer, n - 1 - layer
-        for i in range(first, last):
-            offset = i - first
+def rotate(self, matrix: List[List[int]]) -> None:
+    l, r = 0, len(matrix) - 1
+    
+    while l < r:  # loop through layers of matrix
+        for i in range(r - l):  # loop through elements in current layer
+            top, bottom = l, r
             
-            # Save top
-            top = matrix[first][i]
+            # save the topLeft
+            topLeft = matrix[top][l + i]
             
-            # Left -> Top
-            matrix[first][i] = matrix[last - offset][first]
+            # move bottom-left to top-left
+            matrix[top][l + i] = matrix[bottom - i][l]
             
-            # Bottom -> Left
-            matrix[last - offset][first] = matrix[last][last - offset]
+            # move bottom-right to bottom-left
+            matrix[bottom - i][l] = matrix[bottom][r - i]
             
-            # Right -> Bottom
-            matrix[last][last - offset] = matrix[i][last]
+            # move top-right to bottom-right
+            matrix[bottom][r - i] = matrix[top + i][r]
             
-            # Top -> Right
-            matrix[i][last] = top
+            # set top-right with saved top-left
+            matrix[top + i][r] = topLeft
+            
+        l += 1
+        r -= 1
 ```
 
 #### JavaScript
+
 ```javascript
+/**
+ * @param {number[][]} matrix
+ * @return {void} Do not return anything, modify matrix in-place instead.
+ */
 function rotate(matrix) {
-    const n = matrix.length;
-    for (let layer = 0; layer < Math.floor(n / 2); layer++) {
-        const first = layer;
-        const last = n - 1 - layer;
-        for (let i = first; i < last; i++) {
-            const offset = i - first;
+    let l = 0;
+    let r = matrix.length - 1;
+    
+    while (l < r) {  // loop through layers of matrix
+        for (let i = 0; i < r - l; i++) {  // loop through elements in current layer
+            let top = l;
+            let bottom = r;
             
-            // Save top
-            const top = matrix[first][i];
+            // save the topLeft
+            let topLeft = matrix[top][l + i];
             
-            // Left -> Top
-            matrix[first][i] = matrix[last - offset][first];
+            // move bottom-left to top-left
+            matrix[top][l + i] = matrix[bottom - i][l];
             
-            // Bottom -> Left
-            matrix[last - offset][first] = matrix[last][last - offset];
+            // move bottom-right to bottom-left
+            matrix[bottom - i][l] = matrix[bottom][r - i];
             
-            // Right -> Bottom
-            matrix[last][last - offset] = matrix[i][last];
+            // move top-right to bottom-right
+            matrix[bottom][r - i] = matrix[top + i][r];
             
-            // Top -> Right
-            matrix[i][last] = top;
+            // set top-right with saved top-left
+            matrix[top + i][r] = topLeft;
         }
+        
+        l += 1;
+        r -= 1;
     }
 }
 ```
 
 #### Java
+
 ```java
 public void rotate(int[][] matrix) {
-    int n = matrix.length;
-    for (int layer = 0; layer < n / 2; layer++) {
-        int first = layer;
-        int last = n - 1 - layer;
-        for (int i = first; i < last; i++) {
-            int offset = i - first;
+    int l = 0;
+    int r = matrix.length - 1;
+    
+    while (l < r) {  // loop through layers of matrix
+        for (int i = 0; i < r - l; i++) {  // loop through elements in current layer
+            int top = l;
+            int bottom = r;
             
-            // Save top
-            int top = matrix[first][i];
+            // save the topLeft
+            int topLeft = matrix[top][l + i];
             
-            // Left -> Top
-            matrix[first][i] = matrix[last - offset][first];
+            // move bottom-left to top-left
+            matrix[top][l + i] = matrix[bottom - i][l];
             
-            // Bottom -> Left
-            matrix[last - offset][first] = matrix[last][last - offset];
+            // move bottom-right to bottom-left
+            matrix[bottom - i][l] = matrix[bottom][r - i];
             
-            // Right -> Bottom
-            matrix[last][last - offset] = matrix[i][last];
+            // move top-right to bottom-right
+            matrix[bottom][r - i] = matrix[top + i][r];
             
-            // Top -> Right
-            matrix[i][last] = top;
+            // set top-right with saved top-left
+            matrix[top + i][r] = topLeft;
         }
+        
+        l++;
+        r--;
     }
 }
 ```
