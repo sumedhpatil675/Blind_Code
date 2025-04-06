@@ -149,6 +149,254 @@ public int getSum(int a, int b) {
 }
 ```
 
+# Addition Without the `+` Operator
+
+This function (`getSum`) adds two integers without using the `+` operator by using bit manipulation techniques.
+
+## Explanation with ASCII Diagrams
+
+Let's follow the execution with an example: `getSum(5, 3)`
+
+### Starting Values
+```
+a = 5 = 101 (binary)
+b = 3 = 011 (binary)
+```
+
+### Iteration 1
+
+#### Step 1: Calculate Carry
+```
+a & b = 101 & 011 = 001 (1 in decimal)
+
+    101  (a = 5)
+  & 011  (b = 3)
+  -----
+    001  (carry bits before shifting)
+```
+
+```
+(a & b) << 1 = 001 << 1 = 010 (2 in decimal)
+
+    001  (carry before shift)
+  << 1
+  -----
+    010  (carry after shift = 2)
+```
+
+#### Step 2: Sum Without Carry (Using XOR)
+```
+a ^ b = 101 ^ 011 = 110 (6 in decimal)
+
+    101  (a = 5)
+  ^ 011  (b = 3)
+  -----
+    110  (sum without carry = 6)
+```
+
+#### Step 3: Update Variables
+```
+a = 110 (6 in decimal)
+b = 010 (2 in decimal)
+```
+
+### Iteration 2
+
+#### Step 1: Calculate Carry
+```
+a & b = 110 & 010 = 010 (2 in decimal)
+
+    110  (a = 6)
+  & 010  (b = 2)
+  -----
+    010  (carry bits before shifting)
+```
+
+```
+(a & b) << 1 = 010 << 1 = 100 (4 in decimal)
+
+    010  (carry before shift)
+  << 1
+  -----
+    100  (carry after shift = 4)
+```
+
+#### Step 2: Sum Without Carry (Using XOR)
+```
+a ^ b = 110 ^ 010 = 100 (4 in decimal)
+
+    110  (a = 6)
+  ^ 010  (b = 2)
+  -----
+    100  (sum without carry = 4)
+```
+
+#### Step 3: Update Variables
+```
+a = 100 (4 in decimal)
+b = 100 (4 in decimal)
+```
+
+### Iteration 3
+
+#### Step 1: Calculate Carry
+```
+a & b = 100 & 100 = 100 (4 in decimal)
+
+    100  (a = 4)
+  & 100  (b = 4)
+  -----
+    100  (carry bits before shifting)
+```
+
+```
+(a & b) << 1 = 100 << 1 = 1000 (8 in decimal)
+
+    100  (carry before shift)
+  << 1
+  -----
+   1000  (carry after shift = 8)
+```
+
+#### Step 2: Sum Without Carry (Using XOR)
+```
+a ^ b = 100 ^ 100 = 000 (0 in decimal)
+
+    100  (a = 4)
+  ^ 100  (b = 4)
+  -----
+    000  (sum without carry = 0)
+```
+
+#### Step 3: Update Variables
+```
+a = 000 (0 in decimal)
+b = 1000 (8 in decimal)
+```
+
+### Iteration 4
+
+#### Step 1: Calculate Carry
+```
+a & b = 000 & 1000 = 0000 (0 in decimal)
+
+    0000  (a = 0)
+  & 1000  (b = 8)
+  ------
+    0000  (carry bits before shifting)
+```
+
+```
+(a & b) << 1 = 0000 << 1 = 0000 (0 in decimal)
+
+    0000  (carry before shift)
+  << 1
+  ------
+    0000  (carry after shift = 0)
+```
+
+#### Step 2: Sum Without Carry (Using XOR)
+```
+a ^ b = 0000 ^ 1000 = 1000 (8 in decimal)
+
+    0000  (a = 0)
+  ^ 1000  (b = 8)
+  ------
+    1000  (sum without carry = 8)
+```
+
+#### Step 3: Update Variables
+```
+a = 1000 (8 in decimal)
+b = 0000 (0 in decimal)
+```
+
+### Termination
+Since `b = 0`, the loop terminates and returns `a = 8`, which is the correct sum of 5 + 3!
+
+## Flowchart Representation
+
+```
+┌───────────────┐
+│ Start getSum  │
+│  (a=5, b=3)   │
+└───────┬───────┘
+        │
+        ▼
+┌───────────────┐
+│  while loop   │
+│   (b != 0)    │──────────┐
+└───────┬───────┘          │
+        │                  │
+        ▼                  │
+┌───────────────┐          │
+│ carry = a & b │ 001      │
+│ (then << 1)   │ 010      │
+└───────┬───────┘          │
+        │                  │
+        ▼                  │
+┌───────────────┐          │
+│  a = a ^ b    │ 110      │
+└───────┬───────┘          │
+        │                  │
+        ▼                  │
+┌───────────────┐          │
+│  b = carry    │ 010      │
+└───────┬───────┘          │
+        │                  │
+        ▼                  │
+┌───────────────┐          │
+│  while loop   │          │
+│   (b != 0)    │──────────┤
+└───────┬───────┘          │
+        │                  │
+        ▼                  │
+┌───────────────┐          │
+│ carry = a & b │ 010      │
+│ (then << 1)   │ 100      │
+└───────┬───────┘          │
+        │                  │
+        ▼                  │
+┌───────────────┐          │
+│  a = a ^ b    │ 100      │
+└───────┬───────┘          │
+        │                  │
+        ▼                  │
+┌───────────────┐          │
+│  b = carry    │ 100      │
+└───────┬───────┘          │
+        │                  │
+        ▼                  │
+┌───────────────┐          │
+│  while loop   │          │
+│   (b != 0)    │──────────┤
+└───────┬───────┘          │
+        │                  │
+        ▼                  │
+       ... (continue iterations) ...
+        │                  │
+        ▼                  │
+┌───────────────┐          │
+│  while loop   │          │
+│   (b = 0)     │──────────┘
+└───────┬───────┘
+        │
+        ▼
+┌───────────────┐
+│   return a    │ 8 (result!)
+└───────────────┘
+```
+
+## Summary
+
+1. **XOR (`^`)** calculates the sum without considering carry
+2. **AND (`&`)** followed by left shift (`<<`) calculates the carry
+3. The process repeats until no carry is left (b = 0)
+4. This mimics the standard school addition method but with binary operations
+
+The algorithm has a time complexity of O(log n) where n is the largest number, as in the worst case we need to process all bits.
+
+
 ### 4. Using Bit Manipulation with XOR and Carry
 - **Time complexity**: O(1)
 - **Space complexity**: O(1)
