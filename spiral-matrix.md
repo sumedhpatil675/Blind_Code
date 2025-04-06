@@ -48,6 +48,107 @@ class Solution:
         return res
 ```
 
+#### Spiral Matrix Traversal Explanation
+
+##### Initial Matrix
+```
+ 1  2  3  4
+ 5  6  7  8
+ 9 10 11 12
+13 14 15 16
+```
+
+##### Boundary Pointers
+```
+         top
+         ↓
+     +-------+
+     |→ → → →|
+     |↑     ↓|
+left |↑     ↓| right
+     |↑     ↓|
+     |← ← ← ←|
+     +-------+
+         ↑
+       bottom
+```
+
+##### First Iteration (Outer Loop)
+
+###### Step 1: Traverse Top Row (left → right)
+```
+ 1→ 2→ 3→ 4
+ .       .
+ .       .
+ .       .
+```
+
+###### Step 2: Traverse Right Column (top → bottom)
+```
+ .  .  .  4
+ .       ↓
+ .       ↓
+ .       16
+```
+
+###### Step 3: Traverse Bottom Row (right → left)
+```
+ .  .  .  .
+ .       .
+ .       .
+13← 14← 15← 16
+```
+
+###### Step 4: Traverse Left Column (bottom → top)
+```
+ .  .  .  .
+ 5       .
+ ↑       .
+ 9       .
+ ↑       .
+13       .
+```
+
+##### Second Iteration (Inner Loop)
+
+###### Step 1: Traverse Top Row (left → right)
+```
+ .  .  .  .
+ .  6→ 7  .
+ .       .
+ .       .
+```
+
+###### Step 2: Traverse Right Column (top → bottom)
+```
+ .  .  .  .
+ .  .  7  .
+ .     ↓  .
+ .     11 .
+```
+
+###### Step 3: Traverse Bottom Row (right → left)
+```
+ .  .  .  .
+ .       .
+ .       .
+ .  10← 11 .
+```
+
+###### Step 4: Traverse Left Column (bottom → top)
+```
+ .  .  .  .
+ .  6  .  .
+ .  ↑  .  .
+ .  10 .  .
+```
+
+###### Final Result
+```
+Elements in spiral order: [1, 2, 3, 4, 8, 12, 16, 15, 14, 13, 9, 5, 6, 7, 11, 10]
+```
+
+
 #### JavaScript
 ```javascript
 /**
