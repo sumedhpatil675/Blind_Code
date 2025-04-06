@@ -229,6 +229,106 @@ class Solution:
                     
         return res
 ```
+# Pacific Atlantic Water Flow - Visual Explanation
+
+```
+                  Pacific Ocean
+                  ↓ ↓ ↓ ↓ ↓ ↓
+                 +-----------+
+                →|           |←
+                →|           |←
+                →|  Island   |←  Atlantic Ocean
+                →|  Heights  |←
+                →|           |←
+                 +-----------+
+                  ↑ ↑ ↑ ↑ ↑ ↑
+                  Atlantic Ocean
+```
+
+## Problem Overview
+- We have an island represented by a matrix of heights
+- Pacific Ocean borders the top and left edges
+- Atlantic Ocean borders the bottom and right edges
+- Water flows from higher to equal or lower heights
+- Find cells where water can flow to BOTH oceans
+
+## Algorithm: Reverse DFS Approach
+
+```
+   Pacific Start Points      Atlantic Start Points
+   ↓ ↓ ↓ ↓ ↓ ↓              ↑ ↑ ↑ ↑ ↑ ↑
+  +---------------+         +---------------+
+ →|S S S S S S S S|        |S S S S S S S S|←
+ →|S              |        |              S|←
+ →|S              |        |              S|←
+ →|S              |        |              S|←
+ →|S              |        |              S|←
+  +---------------+         +---------------+
+```
+
+## How It Works
+
+1. Create two sets: `pac` and `atl` to track reachable cells
+2. Run DFS from Pacific borders (top and left edges)
+   - Add cells to `pac` set where water can flow to Pacific
+3. Run DFS from Atlantic borders (bottom and right edges)
+   - Add cells to `atl` set where water can flow to Atlantic
+4. Find the intersection of both sets
+
+## DFS Logic (Reverse Flow)
+
+```
+DFS(r, c, visit, prevHeight):
+  if ((r,c) in visit OR r<0 OR c<0 OR r==ROWS OR c==COLS OR heights[r][c]<prevHeight):
+    return
+  
+  add (r,c) to visit set
+  DFS(r+1, c, visit, heights[r][c])  # Down
+  DFS(r-1, c, visit, heights[r][c])  # Up
+  DFS(r, c+1, visit, heights[r][c])  # Right
+  DFS(r, c-1, visit, heights[r][c])  # Left
+```
+
+## Why Reverse Flow?
+
+```
+Forward (Harder):             Reverse (Easier):
+? ? ? ? ?                     ↑ ↑ ↑ ↑ ↑
+? ? ? ? ?                     ↑ ↑ ? ? ↑
+? ? ? ? ?  Atlantic Ocean     ↑ ? ? ? ↑  Atlantic Ocean
+? ? ? ? ? →→→→→→               ? ? ? ↑ ↑ →→→→→→
+```
+
+- Forward approach: need to check all possible paths from each cell
+- Reverse approach: just work backward from ocean edges
+
+## Final Result Process
+
+```
+For every cell (r,c) in the grid:
+  if (r,c) in pac AND (r,c) in atl:
+    add [r,c] to result list
+```
+
+Example visualization (hypothetical 5×5 grid):
+
+```
+Pacific Reachable     Atlantic Reachable    Result (Intersection)
+P P P P .             . . A A A             . . A A .
+P P P . .             . A A A A             . A A . .
+P P . . .             A A A A A             A A . . .
+P . . . .             A A A A A             . . . . .
+. . . . .             A A A A A             . . . . .
+
+P = Cells that can flow to Pacific
+A = Cells that can flow to Atlantic
+R = Result cells (in both sets)
+```
+
+The algorithm returns coordinates of all 'R' cells.
+
+The algorithm finds all cells that can reach BOTH oceans by exploring from the oceans inward and finding the overlap.
+
 
 #### JavaScript
 ```javascript
