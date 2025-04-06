@@ -97,9 +97,9 @@ def rotate(self, matrix: List[List[int]]) -> None:
         l += 1
         r -= 1
 ```
-# Matrix Rotation Algorithm - Clear Explanation
+##### Matrix Rotation Algorithm - Clear Explanation
 
-## Original Matrix
+#### Original Matrix
 
 ```
 +-----+-----+-----+-----+
@@ -113,7 +113,7 @@ def rotate(self, matrix: List[List[int]]) -> None:
 +-----+-----+-----+-----+
 ```
 
-## Layer 1, Iteration 1
+#### Layer 1, Iteration 1
 
 Elements being moved: 1, 4, 16, 13
 
@@ -148,7 +148,7 @@ After moving:
 +-----+-----+-----+-----+
 ```
 
-## Layer 1, Iteration 2
+#### Layer 1, Iteration 2
 
 Elements being moved: 2, 8, 15, 9
 
@@ -183,7 +183,7 @@ After moving:
 +-----+-----+-----+-----+
 ```
 
-## Layer 1, Iteration 3
+#### Layer 1, Iteration 3
 
 Elements being moved: 3, 12, 14, 5
 
@@ -218,7 +218,7 @@ After moving:
 +-----+-----+-----+-----+
 ```
 
-## Layer 2, Iteration 1
+#### Layer 2, Iteration 1
 
 Elements being moved: 6, 7, 11, 10
 
@@ -253,7 +253,7 @@ After moving:
 +-----+-----+-----+-----+
 ```
 
-## Final Rotated Matrix
+#### Final Rotated Matrix
 
 The matrix after all rotations:
 
