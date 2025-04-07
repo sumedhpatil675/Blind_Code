@@ -10,7 +10,7 @@ Implement the Trie class:
 
 ## Approaches
 
-### 1. Prefix Tree (Array)
+### 1. Prefix Tree (Array) ✅
 
 **Time complexity:** O(n) for each function call.  
 **Space complexity:** O(t)  
