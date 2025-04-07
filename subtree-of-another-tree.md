@@ -7,7 +7,8 @@ A subtree of a binary tree `tree` is a tree that consists of a node in `tree` an
 
 ## Approaches
 
-### 1. Recursive Approach (Check Every Node)
+### 1. Recursive Approach (Check Every Node) ✅✅✅
+
 * Time complexity: O(m * n) where m is the number of nodes in root tree and n is the number of nodes in subRoot tree
 * Space complexity: O(h) where h is the height of the root tree (worst case O(m) for skewed tree)
 
