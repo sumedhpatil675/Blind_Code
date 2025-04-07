@@ -6,7 +6,7 @@ Each node in the graph contains a value (int) and a list (List[Node]) of its nei
 
 ## Approaches
 
-### 1. Depth First Search
+### 1. Depth First Search ✅
 
 **Time complexity:** O(V+E)  
 **Space complexity:** O(V)  
