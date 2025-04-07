@@ -60,7 +60,8 @@ class Solution {
 }
 ```
 
-### 2. Stack
+### 2. Stack ✅✅✅
+
 * Time complexity: O(n)
 * Space complexity: O(n)
 
