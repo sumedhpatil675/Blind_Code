@@ -5,7 +5,8 @@ Given the head of a singly linked list, reverse the list, and return the reverse
 
 ## Approaches
 
-### 1. Iterative Approach
+### 1. Iterative Approach ✅✅✅
+
 * Time complexity: O(n)
 * Space complexity: O(1)
 
