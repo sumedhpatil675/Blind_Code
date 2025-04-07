@@ -182,7 +182,7 @@ class Solution {
 }
 ```
 
-### 3. Hash Set (Optimal)
+### 3. Hash Set (Optimal) ✅✅✅
 * Time complexity: O(n)
 * Space complexity: O(n)
 
