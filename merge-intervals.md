@@ -4,7 +4,8 @@ Given an array of intervals where `intervals[i] = [starti, endi]`, merge all ove
 
 ## Approaches
 
-### 1. Sorting
+### 1. Sorting ✅✅✅
+ 
 - **Time complexity**: O(n log n)
 - **Space complexity**: O(n) depending on the sorting algorithm
 
