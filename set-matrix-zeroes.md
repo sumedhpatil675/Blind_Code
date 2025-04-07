@@ -197,7 +197,8 @@ public void setZeroes(int[][] matrix) {
 }
 ```
 
-### 3. Using First Row and Column as Markers
+### 3. Using First Row and Column as Markers ✅✅✅
+
 - **Time complexity**: O(m*n)
 - **Space complexity**: O(1)
 
