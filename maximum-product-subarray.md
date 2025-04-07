@@ -271,7 +271,7 @@ class Solution {
 }
 ```
 
-### 3. Kadane's Algorithm
+### 3. Kadane's Algorithm ✅✅✅
 
 **Time complexity:** O(n)  
 **Space complexity:** O(1)
