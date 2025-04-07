@@ -218,7 +218,7 @@ class Solution {
 }
 ```
 
-### 3. Two Pointers
+### 3. Two Pointers ✅✅✅
 
 **Time complexity:** O(n²)  
 **Space complexity:** O(1)
