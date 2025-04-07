@@ -225,7 +225,7 @@ public int[][] insert(int[][] intervals, int[] newInterval) {
 }
 ```
 
-### 3. Greedy (One-pass)
+### 3. Greedy (One-pass) ✅
 - **Time complexity**: O(n)
 - **Space complexity**: O(n)
 
