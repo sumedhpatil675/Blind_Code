@@ -7,7 +7,7 @@ To invert a binary tree, you need to swap each node's left and right children.
 
 ## Approaches
 
-### 1. Recursive Depth-First Search (DFS)
+### 1. Recursive Depth-First Search (DFS) ✅✅
 * Time complexity: O(n) where n is the number of nodes in the tree
 * Space complexity: O(h) where h is the height of the tree (worst case O(n) for skewed tree)
 
