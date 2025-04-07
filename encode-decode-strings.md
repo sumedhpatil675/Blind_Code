@@ -4,7 +4,7 @@ Design an algorithm to encode a list of strings to a string. The encoded string 
 
 ## Approaches
 
-### 1. Length-Based Encoding
+### 1. Length-Based Encoding ✅
 - **Time complexity**: O(n) for both encode and decode
 - **Space complexity**: O(n) for both encode and decode
 
