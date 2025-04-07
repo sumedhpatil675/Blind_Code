@@ -60,7 +60,8 @@ class Solution {
 }
 ```
 
-### 2. Two Pointers
+### 2. Two Pointers ✅✅✅
+
 * Time complexity: O(n)
 * Space complexity: O(1)
 
