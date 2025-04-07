@@ -120,7 +120,8 @@ public class Solution {
 }
 ```
 
-### 2. Floyd's Cycle-Finding Algorithm (Slow and Fast Pointers)
+### 2. Floyd's Cycle-Finding Algorithm (Slow and Fast Pointers) ✅✅✅
+
 * Time complexity: O(n) where n is the number of nodes in the linked list
 * Space complexity: O(1) since we only use two pointers
 
