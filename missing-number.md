@@ -159,7 +159,7 @@ public int missingNumber(int[] nums) {
 }
 ```
 
-### 5. Gauss Formula (Optimized Math)
+### 5. Gauss Formula (Optimized Math) ✅✅✅
 - **Time complexity**: O(n)
 - **Space complexity**: O(1)
 
