@@ -221,7 +221,7 @@ class Solution {
 }
 ```
 
-### 4. Dynamic Programming (Space Optimized)
+### 4. Dynamic Programming (Space Optimized) ✅
 
 **Time complexity:** O(n)  
 **Space complexity:** O(1)
