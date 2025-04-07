@@ -4,7 +4,7 @@ Given an integer n, return an array ans of length n + 1 such that for each i (0 
 
 ## Approaches
 
-### 1. Bit Manipulation - I
+### 1. Bit Manipulation - I ✅
 - **Time complexity**: O(n)
 - **Space complexity**: O(1)
 
