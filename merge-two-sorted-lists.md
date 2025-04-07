@@ -9,7 +9,8 @@ Return the head of the merged linked list.
 
 ## Approaches
 
-### 1. Iterative Approach
+### 1. Iterative Approach ✅✅✅
+
 * Time complexity: O(n + m) where n and m are the lengths of the two lists
 * Space complexity: O(1) because we are reusing the original nodes
 
