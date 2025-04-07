@@ -140,7 +140,7 @@ class Solution {
 }
 ```
 
-### 2. Backtracking (Visited Array)
+### 2. Backtracking (Visited Array) ✅✅✅
 
 **Time complexity:** O(m * 4^n)  
 **Space complexity:** O(m * n)  
