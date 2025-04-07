@@ -145,7 +145,8 @@ class Solution {
 }
 ```
 
-### 2. Three-Step Approach (Find Middle, Reverse Second Half, Merge)
+### 2. Three-Step Approach (Find Middle, Reverse Second Half, Merge) ✅✅✅
+
 * Time complexity: O(n)
 * Space complexity: O(1)
 
