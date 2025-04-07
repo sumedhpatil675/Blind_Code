@@ -134,7 +134,8 @@ class Solution {
 }
 ```
 
-### 2. Sliding Window (Optimal)
+### 2. Sliding Window (Optimal) ✅✅✅
+
 * Time complexity: O(n + m) where n is the length of string s and m is the length of string t
 * Space complexity: O(n + m)
 
