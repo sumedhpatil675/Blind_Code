@@ -164,7 +164,8 @@ class Solution {
 }
 ```
 
-### 3. Two Pointers (Optimal)
+### 3. Two Pointers (Optimal) ✅✅✅
+
 * Time complexity: O(n²)
 * Space complexity: O(1) excluding the output
 
