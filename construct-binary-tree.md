@@ -4,7 +4,7 @@ Given two integer arrays preorder and inorder where preorder is the preorder tra
 
 ## Approaches
 
-### 1. Depth First Search
+### 1. Depth First Search ✅
 
 **Time complexity:** O(n²)  
 **Space complexity:** O(n²)
