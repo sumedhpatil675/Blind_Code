@@ -6,7 +6,7 @@ You can assume that no duplicate edges will appear in edges. Since all edges are
 
 ## Approaches
 
-### 1. Cycle Detection (DFS)
+### 1. Cycle Detection (DFS) ✅
 
 **Time complexity:** O(V+E)  
 **Space complexity:** O(V+E)  
