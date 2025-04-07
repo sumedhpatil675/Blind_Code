@@ -65,7 +65,8 @@ public void rotate(int[][] matrix) {
 }
 ```
 
-### 2. Rotate Four Cells at a Time
+### 2. Rotate Four Cells at a Time ✅✅✅
+
 - **Time complexity**: O(n²)
 - **Space complexity**: O(1)
 
