@@ -7,7 +7,8 @@ Two binary trees are considered the same if they are structurally identical, and
 
 ## Approaches
 
-### 1. Recursive Depth-First Search (DFS)
+### 1. Recursive Depth-First Search (DFS) ✅✅✅
+
 * Time complexity: O(n) where n is the number of nodes in the tree
 * Space complexity: O(h) where h is the height of the tree (worst case O(n) for skewed tree)
 
