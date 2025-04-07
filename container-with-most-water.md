@@ -72,7 +72,7 @@ class Solution {
 }
 ```
 
-### 2. Two Pointers (Optimal)
+### 2. Two Pointers (Optimal) ✅
 * Time complexity: O(n)
 * Space complexity: O(1)
 
