@@ -8,7 +8,7 @@ Return true if you can finish all courses. Otherwise, return false.
 
 ## Approaches
 
-### 1. Cycle Detection (DFS)
+### 1. Cycle Detection (DFS) ✅
 
 **Time complexity:** O(V+E)  
 **Space complexity:** O(V+E)  
