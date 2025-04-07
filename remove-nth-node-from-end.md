@@ -122,7 +122,8 @@ class Solution {
 }
 ```
 
-### 2. One-Pass Approach (Two Pointers)
+### 2. One-Pass Approach (Two Pointers) ✅✅✅
+
 * Time complexity: O(n) where n is the length of the linked list
 * Space complexity: O(1)
 
