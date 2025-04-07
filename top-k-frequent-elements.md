@@ -181,7 +181,8 @@ class Solution {
 }
 ```
 
-### 3. Bucket Sort
+### 3. Bucket Sort ✅✅✅
+
 * Time complexity: O(n)
 * Space complexity: O(n)
 
