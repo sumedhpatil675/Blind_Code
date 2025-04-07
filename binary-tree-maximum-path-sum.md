@@ -154,7 +154,7 @@ class Solution {
 }
 ```
 
-### 2. Depth First Search (CodeStoryWithMik's Approach)
+### 2. Depth First Search (CodeStoryWithMik's Approach) ✅
 
 **Time complexity:** O(n)  
 **Space complexity:** O(n)
