@@ -63,7 +63,8 @@ public boolean canAttendMeetings(int[][] intervals) {
 }
 ```
 
-### 2. Sorting
+### 2. Sorting ✅✅✅
+
 - **Time complexity**: O(n log n)
 - **Space complexity**: O(1) or O(n) depending on the sorting algorithm
 
