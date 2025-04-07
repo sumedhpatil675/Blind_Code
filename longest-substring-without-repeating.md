@@ -68,7 +68,8 @@ class Solution {
 }
 ```
 
-### 2. Sliding Window with Set
+### 2. Sliding Window with Set ✅✅✅
+
 * Time complexity: O(n) where n is the length of the string
 * Space complexity: O(min(n, m)) where m is the size of the character set
 
