@@ -93,7 +93,7 @@ class Solution {
 }
 ```
 
-### 3. Hash Set
+<span style="color:blue">### 3. Hash Set</span>
 * Time complexity: O(n)
 * Space complexity: O(n)
 
