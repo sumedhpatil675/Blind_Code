@@ -43,7 +43,8 @@ public int reverseBits(int n) {
 }
 ```
 
-### 2. Bit Manipulation
+### 2. Bit Manipulation ✅✅✅
+
 - **Time complexity**: O(1)
 - **Space complexity**: O(1)
 
