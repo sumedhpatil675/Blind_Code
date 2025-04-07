@@ -15,7 +15,8 @@ In this grid, there are 3 islands.
 
 ## Approaches
 
-### 1. Depth First Search (DFS)
+### 1. Depth First Search (DFS)  ✅✅✅
+
 - **Time complexity**: O(m*n)
 - **Space complexity**: O(m*n)
 
