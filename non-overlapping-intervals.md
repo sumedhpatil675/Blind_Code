@@ -318,7 +318,8 @@ public int eraseOverlapIntervals(int[][] intervals) {
 }
 ```
 
-### 5. Greedy (Sort by Start)
+### 5. Greedy (Sort by Start) ✅✅✅
+
 - **Time complexity**: O(n log n)
 - **Space complexity**: O(1) or O(n) depending on the sorting algorithm
 
