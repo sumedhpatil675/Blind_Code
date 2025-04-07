@@ -202,7 +202,8 @@ public int minMeetingRooms(int[][] intervals) {
 }
 ```
 
-### 3. Two Pointers
+### 3. Two Pointers ✅✅✅
+
 - **Time complexity**: O(n log n)
 - **Space complexity**: O(n)
 
