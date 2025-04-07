@@ -91,7 +91,7 @@ class MedianFinder {
 }
 ```
 
-### 2. Heap
+### 2. Heap ✅
 
 **Time complexity:**  
 - `addNum()`: O(log n)
