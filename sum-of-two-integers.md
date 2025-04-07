@@ -4,7 +4,8 @@ Given two integers a and b, return the sum of the two integers without using the
 
 ## Approaches
 
-### 1. Bit Manipulation (Basic)
+### 1. Bit Manipulation (Basic) ✅✅✅
+ 
 - **Time complexity**: O(1)
 - **Space complexity**: O(1)
 
