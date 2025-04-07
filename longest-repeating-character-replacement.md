@@ -188,7 +188,7 @@ class Solution {
 }
 ```
 
-### 3. Sliding Window (Optimal)
+### 3. Sliding Window (Optimal) ✅✅✅
 * Time complexity: O(n)
 * Space complexity: O(1)
 
