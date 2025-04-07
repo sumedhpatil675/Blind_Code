@@ -129,7 +129,7 @@ class WordDictionary {
 }
 ```
 
-### 2. Depth First Search (Trie)
+### 2. Depth First Search (Trie) ✅
 
 **Time complexity:**  
 - `addWord()`: O(n)
