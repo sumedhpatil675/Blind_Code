@@ -131,7 +131,7 @@ class Solution {
 }
 ```
 
-### 2. Depth First Search
+### 2. Depth First Search ✅✅✅
 
 **Time complexity:** O(n)  
 **Space complexity:** O(n)
