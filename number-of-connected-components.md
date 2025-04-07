@@ -8,7 +8,7 @@ Return the total number of connected components in that graph.
 
 ## Approaches
 
-### 1. Depth First Search
+### 1. Depth First Search ✅✅✅
 
 **Time complexity:** O(V+E)  
 **Space complexity:** O(V+E)  
