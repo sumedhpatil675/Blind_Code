@@ -189,7 +189,8 @@ class Solution {
 }
 ```
 
-### 3. One-Pass Binary Search
+### 3. One-Pass Binary Search ✅✅✅
+
 * Time complexity: O(log n)
 * Space complexity: O(1)
 
