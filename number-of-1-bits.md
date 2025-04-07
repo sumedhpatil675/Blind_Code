@@ -44,7 +44,8 @@ public int hammingWeight(int n) {
 }
 ```
 
-### 2. Bit Mask - II
+### 2. Bit Mask - II ✅✅✅
+
 - **Time complexity**: O(1)
 - **Space complexity**: O(1)
 
