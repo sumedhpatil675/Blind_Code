@@ -50,7 +50,8 @@ public int maxSubArray(int[] nums) {
 }
 ```
 
-### 2. Kadane's Algorithm
+### 2. Kadane's Algorithm ✅✅✅
+
 - **Time complexity**: O(n)
 - **Space complexity**: O(1)
 
