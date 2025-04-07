@@ -154,7 +154,8 @@ private boolean dfs(String s, List<String> wordDict, int start, Map<Integer, Boo
 }
 ```
 
-### 3. Dynamic Programming (Bottom-Up)
+### 3. Dynamic Programming (Bottom-Up) ✅✅✅
+
 - **Time complexity**: O(n * m * t)
   - n is the length of the string s
   - m is the number of words in wordDict
