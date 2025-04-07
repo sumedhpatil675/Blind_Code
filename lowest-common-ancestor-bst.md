@@ -114,7 +114,8 @@ class Solution {
 }
 ```
 
-### 2. Iterative Approach
+### 2. Iterative Approach ✅✅✅
+
 * Time complexity: O(h) where h is the height of the tree (worst case O(n) for skewed tree)
 * Space complexity: O(1) as we only use a constant amount of extra space
 
