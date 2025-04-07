@@ -66,7 +66,7 @@ class Solution {
 }
 ```
 
-### 2. Character Count
+### 2. Character Count ✅
 * Time complexity: O(m * n) where m is the number of strings and n is the length of the longest string
 * Space complexity: O(m * n)
 
