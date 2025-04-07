@@ -151,7 +151,7 @@ private int dfs(int[] nums, int i, int j, int[][] memo) {
 }
 ```
 
-### 3. Dynamic Programming (Bottom-Up)
+### 3. Dynamic Programming (Bottom-Up) ✅✅✅
 - **Time complexity**: O(n²)
 - **Space complexity**: O(n)
 
