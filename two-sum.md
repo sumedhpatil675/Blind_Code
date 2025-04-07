@@ -213,7 +213,8 @@ class Solution {
 }
 ```
 
-### 4. Hash Map (One Pass)
+### 4. Hash Map (One Pass) ✅✅✅
+
 * Time complexity: O(n)
 * Space complexity: O(n)
 
