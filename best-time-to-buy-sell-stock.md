@@ -61,7 +61,7 @@ class Solution {
 }
 ```
 
-### 2. Two Pointers (Sliding Window)
+### 2. Two Pointers (Sliding Window) ✅
 * Time complexity: O(n)
 * Space complexity: O(1)
 
