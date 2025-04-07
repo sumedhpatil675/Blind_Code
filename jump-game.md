@@ -232,7 +232,8 @@ public boolean canJump(int[] nums) {
 }
 ```
 
-### 4. Greedy
+### 4. Greedy ✅✅✅
+
 - **Time complexity**: O(n)
 - **Space complexity**: O(1)
 
