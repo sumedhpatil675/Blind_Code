@@ -151,7 +151,7 @@ class Solution {
 }
 ```
 
-### 3. Binary Search (Optimized)
+### 3. Binary Search (Optimized) ✅
 * Time complexity: O(log n)
 * Space complexity: O(1)
 
