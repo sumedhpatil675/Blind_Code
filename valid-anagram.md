@@ -111,7 +111,8 @@ class Solution {
 }
 ```
 
-### 3. Array Counter (Optimal for lowercase letters)
+### 3. Array Counter (Optimal for lowercase letters) ✅✅✅
+
 * Time complexity: O(n)
 * Space complexity: O(1)
 
