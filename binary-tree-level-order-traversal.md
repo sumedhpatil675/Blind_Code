@@ -5,7 +5,7 @@ Given the `root` of a binary tree, return the level order traversal of its nodes
 
 ## Approaches
 
-### 1. Breadth-First Search (BFS) with Queue
+### 1. Breadth-First Search (BFS) with Queue ✅
 * Time complexity: O(n) where n is the number of nodes in the tree
 * Space complexity: O(n) in the worst case (perfect binary tree's last level has n/2 nodes)
 
