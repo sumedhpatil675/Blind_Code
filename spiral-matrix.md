@@ -4,7 +4,8 @@ Given an m x n matrix, return all elements of the matrix in spiral order.
 
 ## Approaches
 
-### 1. Layer by Layer (Simulation)
+### 1. Layer by Layer (Simulation) ✅✅✅
+
 - **Time complexity**: O(m*n)
 - **Space complexity**: O(1)
 
