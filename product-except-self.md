@@ -267,7 +267,8 @@ class Solution {
 }
 ```
 
-### 4. Prefix & Suffix (Space Optimized)
+### 4. Prefix & Suffix (Space Optimized) ✅✅✅
+
 * Time complexity: O(n)
 * Space complexity: O(1) (excluding output array)
 
