@@ -6,7 +6,7 @@ Design an algorithm to serialize and deserialize a binary tree. There is no rest
 
 ## Approaches
 
-### 1. Depth First Search
+### 1. Depth First Search ✅✅✅
 
 **Time complexity:** O(n)  
 **Space complexity:** O(n)
