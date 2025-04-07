@@ -251,7 +251,7 @@ class Solution {
 }
 ```
 
-### 4. Iterative DFS (Optimal)
+### 4. Iterative DFS (Optimal) ✅✅✅
 
 **Time complexity:** O(n)  
 **Space complexity:** O(n)
