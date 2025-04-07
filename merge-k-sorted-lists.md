@@ -271,7 +271,8 @@ class Solution {
 }
 ```
 
-### 3. Divide and Conquer Approach
+### 3. Divide and Conquer Approach ✅✅✅
+
 * Time complexity: O(N log k) where N is the total number of nodes and k is the number of linked lists
 * Space complexity: O(log k) for the recursion stack
 
