@@ -6,7 +6,7 @@ The same number may be chosen from candidates an unlimited number of times. Two 
 
 ## Approaches
 
-### 1. Backtracking
+### 1. Backtracking ✅
 
 **Time complexity:** O(2^(t/m))  
 **Space complexity:** O(t/m)  
