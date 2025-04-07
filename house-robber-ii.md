@@ -176,7 +176,7 @@ class Solution {
 }
 ```
 
-### 3. Dynamic Programming (Bottom-Up)
+### 3. Dynamic Programming (Bottom-Up) ✅
 
 **Time complexity:** O(n)  
 **Space complexity:** O(n)
